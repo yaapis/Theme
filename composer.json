@@ -1,0 +1,20 @@
+{
+    "name": "yaap/theme",
+    "description": "",
+    "authors": [
+        {
+            "name": "YAAP",
+            "email": "biluk.a@newway.com.ua"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "YAAP\\Theme": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
