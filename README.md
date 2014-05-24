@@ -19,7 +19,7 @@ And add the ServiceProvider to the providers array in app/config/app.php
 Publish config using artisan CLI (if you want to overwrite default config).
 
 ~~~bash
-'php artisan config:publish yaap/theme'
+php artisan config:publish yaap/theme
 ~~~
 
 You can register the facade in the `aliases` key of your `app/config/app.php` file.
@@ -80,6 +80,20 @@ You can register the facade in the `aliases` key of your `app/config/app.php` fi
 			└──	images/
                 └── icon.png
 ```
+
+### Create theme with artisan CLI
+
+The first time you have to create theme "default" structure, using the artisan command:
+
+~~~bash
+php artisan theme:create default
+~~~
+
+To delete an existing theme, use the command:
+
+~~~bash
+php artisan theme:destroy default
+~~~
 
 ###Init theme
 
