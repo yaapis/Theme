@@ -12,7 +12,6 @@ return array(
     */
 
         'path'         => app_path('views/themes'),
-
     /*
     |--------------------------------------------------------------------------
     | Path to directory with assets
@@ -22,6 +21,22 @@ return array(
     |
     */
 
-        'assets_path'         => 'assets/themes',
+        'assets_path'  => 'assets/themes',
+    /*
+    |--------------------------------------------------------------------------
+    | A pieces of theme collections
+    |--------------------------------------------------------------------------
+    |
+    | Inside a theme path we need to set up directories to
+    | keep "layouts", "assets" and "partials".
+    |
+    */
+
+        'containerDir' => array(
+            'layout'  => 'layouts',
+            'partial' => 'partials',
+            'view'    => 'views',
+        ),
+
 
 );

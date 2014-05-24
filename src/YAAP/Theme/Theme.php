@@ -69,7 +69,7 @@ class Theme
         $path = $this->app['config']->get('theme::path', app_path('views/themes'));
 
         //init config
-        $this->config = include($path . '/' . $theme . '/config.php');
+        $this->config = $this->_readConfig($path . '/' . $theme . '/config.php');
 
 
         // theme parents
@@ -83,11 +83,10 @@ class Theme
             // add folder with views
             $this->finder->addLocation($path . '/' . $theme . '/views');
 
-
             // read theme config
-            $current_theme_config = include($path . '/' . $theme . '/config.php');
+            $current_theme_config = $this->_readConfig($path . '/' . $theme . '/config.php');
 
-            $theme = array_get($current_theme_config, 'parent_theme');
+            $theme = array_get($current_theme_config, 'inherit');
 
             if (!empty($theme)) {
                 $this->parents[] = $theme;
@@ -107,14 +106,14 @@ class Theme
     public function asset($path, $secure = null, $version = false)
     {
 
-        $full_path = $this->_asset_full_path($path);
+        $full_path = $this->_assetFullpath($path);
 
         $asset = $this->app['url']->asset($full_path, $secure);
 
         if ($version) {
 
             if (is_bool($version)) {
-                $asset .= '?v=' . $this->_asset_version($path);
+                $asset .= '?v=' . $this->_assetVersion($path);
             } else {
                 $asset .= '?v=' . $version;
             }
@@ -130,10 +129,10 @@ class Theme
      * @param $path
      * @return int|null
      */
-    private function _asset_version($path)
+    private function _assetVersion($path)
     {
 
-        $full_path = $this->_asset_full_path($path);
+        $full_path = $this->_assetFullpath($path);
 
         $file_path = public_path($full_path);
 
@@ -151,7 +150,7 @@ class Theme
      * @param $path
      * @return string
      */
-    private function _asset_full_path($path)
+    private function _assetFullpath($path)
     {
 
         $path = trim($path, '/');
@@ -194,6 +193,13 @@ class Theme
         $this->cache[$path] = $full_path;
 
         return $full_path;
+    }
+
+    private function _readConfig($path){
+        if (file_exists($path))
+                return include($path );
+
+        return array();
     }
 
 }

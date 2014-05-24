@@ -40,7 +40,26 @@ class ThemeServiceProvider extends ServiceProvider {
             return $theme;
         });
 
+        // commands
+        $this->app['theme.create'] = $this->app->share(function($app)
+        {
+            return new Commands\ThemeGeneratorCommand($app['config'], $app['files']);
+        });
+
+        $this->app['theme.destroy'] = $this->app->share(function($app)
+        {
+            return new Commands\ThemeDestroyCommand($app['config'], $app['files']);
+        });
+
+        // Assign commands.
+        $this->commands(
+            'theme.create',
+            'theme.destroy'
+        );
+
 	}
+
+
 
 	/**
 	 * Get the services provided by the provider.
