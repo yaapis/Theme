@@ -1,6 +1,6 @@
 # Theme support for Laravel 4
 
-Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme), but without any asset manager.
+Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
 Themes are stored inside default laravel's app/views folder
 
 ## Installation
