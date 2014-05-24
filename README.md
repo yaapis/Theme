@@ -100,11 +100,14 @@ View::make('emails.notify');
 
 ### Assets
 Assets can be nested too.
-Function `Theme::asset_version` returns the retult of filemtime - great way to manage asset versions automatically.
+Asset url can be automatically with version.
 
 ~~~css
-<link rel="stylesheet" href="{{ Theme::asset('css/styles.css') }}?v={{ Theme::asset_version('css/styles.css') }}"/>
+<link rel="stylesheet" href="{{ Theme::asset('css/styles.css', null, true) }}"/>
+<link rel="stylesheet" href="{{ Theme::asset('css/ie.css', null, 'v1') }}"/>
 ~~~
+
+The first one will get version from filemtime, the second one - from params
 
 
 ###Blade templates

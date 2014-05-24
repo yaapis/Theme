@@ -101,14 +101,26 @@ class Theme
      *
      * @param $path
      * @param null $secure
+     * @param bool $version
      * @return mixed
      */
-    public function asset($path, $secure = null)
+    public function asset($path, $secure = null, $version = false)
     {
 
         $full_path = $this->_asset_full_path($path);
 
-        return $this->app['url']->asset($full_path, $secure);
+        $asset = $this->app['url']->asset($full_path, $secure);
+
+        if ($version) {
+
+            if (is_bool($version)) {
+                $asset .= '?v=' . $this->_asset_version($path);
+            } else {
+                $asset .= '?v=' . $version;
+            }
+        }
+
+        return $asset;
 
     }
 
@@ -118,7 +130,7 @@ class Theme
      * @param $path
      * @return int|null
      */
-    public function asset_version($path)
+    private function _asset_version($path)
     {
 
         $full_path = $this->_asset_full_path($path);
