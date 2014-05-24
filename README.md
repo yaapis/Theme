@@ -6,30 +6,50 @@ Themes are stored inside default laravel's app/views folder
 ## Installation
 Require this package in your composer.json:
 
-    "yaap/theme": "dev-master"
+~~~json
+"yaap/theme": "dev-master"
+~~~
 
 And add the ServiceProvider to the providers array in app/config/app.php
 
-    'YAAP\Theme\ThemeServiceProvider',
+~~~php
+'YAAP\Theme\ThemeServiceProvider',
+~~~
 
 Publish config using artisan CLI (if you want to overwrite default config).
 
-    'php artisan config:publish yaap/theme'
+~~~bash
+'php artisan config:publish yaap/theme'
+~~~
 
 You can register the facade in the `aliases` key of your `app/config/app.php` file.
 
-~~~
+~~~php
 'aliases' => array(
     'Theme' => 'YAAP\Theme\Facades\Theme'
 )
 ~~~
 
 
-##Config
+## Package config
 
-    return array(
-        'path' => app_path('views/themes'),
+~~~php
+	return array(
+        'path'          => app_path('views/themes'),
+        'assets_path'   => 'assets/themes',
     );
+~~~
+
+
+## Theme config
+
+~~~php
+	return array(
+        'name'         => 'default',
+        'parent_theme' => null,
+    );
+~~~
+
 
 
 ##Usage
@@ -41,28 +61,51 @@ You can register the facade in the `aliases` key of your `app/config/app.php` fi
     └── themes/
         ├── default/
         |   ├── layouts/
-        |   ├── partials/
-        |   └── views/
-	    |       └── hello.blade.php
+            ├── partials/
+            ├── views/
+	        |   └── hello.blade.php
+	        └── config.php
+
         └── admin/
+
     ├── emails/
     |   └── notify.blade.php
     └── errors/
 
+├── public/assets/
+    └── themes/
+		└── default/
+			├── css/
+			|	└── styles.css
+			└──	images/
+                └── icon.png
 ```
 
 ###Init theme
 
-    Theme::init($name)
-    Theme::init($name)
+~~~php
+Theme::init($name)
+~~~
 
 This will add to views find path:
 * app/views/{$name}
 * app/views/{$name}/views
 
 ### Making view
-	View::make('hello');
-	View::make('emails.notify');
+
+~~~php
+View::make('hello');
+View::make('emails.notify');
+~~~
+
+### Assets
+Assets can be nested too.
+Function `Theme::asset_version` returns the retult of filemtime - great way to manage asset versions automatically.
+
+~~~css
+<link rel="stylesheet" href="{{ Theme::asset('css/styles.css') }}?v={{ Theme::asset_version('css/styles.css') }}"/>
+~~~
+
 
 ###Blade templates
 
