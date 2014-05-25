@@ -1,6 +1,7 @@
 {
     "name": "yaap/theme",
     "description": "",
+    "license": "MIT",
     "authors": [
         {
             "name": "YAAP",
