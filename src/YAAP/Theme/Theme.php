@@ -2,6 +2,7 @@
 
 use Illuminate\Container\Container;
 use Illuminate\View\ViewFinderInterface;
+use YAAP\Theme\Exceptions\ThemeException;
 
 /**
  * Class Theme
@@ -38,9 +39,13 @@ class Theme
 
     /**
      *  cache for paths
-     *
      */
     protected $cache;
+
+    /**
+     *  current theme
+     */
+    protected $theme;
 
     /**
      * Build a new Theme manager
@@ -61,21 +66,27 @@ class Theme
      *
      * Initialize a theme by name
      * @param $theme
+     * @throws ThemeException
      */
     public function init($theme)
     {
+
+        if (empty($theme)) throw new ThemeException('Theme name should not be empty');
+
+        $this->theme = $theme;
 
         // read theme path
         $path = $this->app['config']->get('theme::path', app_path('views/themes'));
 
         //init config
-        $this->config = $this->_readConfig($path . '/' . $theme . '/config.php');
-
+        $this->config = $this->_readConfig( $path . '/' . $theme . '/config.php');
 
         // theme parents
         $this->parents = array();
 
         while (!empty($theme)) {
+
+            if (!is_dir($path . '/' . $theme)) throw new ThemeException('Theme '.$theme.' not found.');
 
             // add theme's root folder
             $this->finder->addLocation($path . '/' . $theme);
@@ -101,10 +112,13 @@ class Theme
      * @param $path
      * @param null $secure
      * @param bool $version
+     * @throws Exceptions\ThemeException
      * @return mixed
      */
     public function asset($path, $secure = null, $version = false)
     {
+
+        if (!$this->theme) throw new ThemeException('Theme should be init first');
 
         $full_path = $this->_assetFullpath($path);
 
@@ -162,9 +176,7 @@ class Theme
 
         $assets_path = trim($this->app['config']->get('theme::assets_path', 'assets/themes'), '/');
 
-        $name = array_get($this->config, 'name');
-
-        $full_path = $assets_path . '/' . $name . '/' . $path;
+        $full_path = $assets_path . '/' . $this->theme . '/' . $path;
 
         // theme has this asset
         if (!file_exists(public_path($full_path))) {
@@ -185,7 +197,7 @@ class Theme
             // in case of failure to find asset - return default theme asset
             // (404 error will be signal of promlems)
             if (!$found) {
-                $full_path = $assets_path . '/' . $name . '/' . $path;
+                $full_path = $assets_path . '/' . $this->theme . '/' . $path;
             }
 
         }
@@ -195,9 +207,13 @@ class Theme
         return $full_path;
     }
 
+    /**
+     * @param $path
+     * @return array|mixed
+     */
     private function _readConfig($path){
         if (file_exists($path))
-                return include($path );
+                return include($path);
 
         return array();
     }
