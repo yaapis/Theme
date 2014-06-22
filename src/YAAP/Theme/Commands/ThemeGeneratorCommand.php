@@ -90,7 +90,7 @@ class ThemeGeneratorCommand extends Command {
 
 
 		// Generate inside config.
-		$this->makeFile('config.php', $this->getTemplate('config'));
+		$this->makeFile('config.php', $this->getTemplate('config', ['%theme_name%' => $this->getTheme()]));
 
 		$this->info('Theme "'.$this->getTheme().'" has been created.');
 	}
@@ -166,18 +166,26 @@ class ThemeGeneratorCommand extends Command {
 		return strtolower($this->argument('name'));
 	}
 
-	/**
-	 * Get default template.
-	 *
-	 * @param  string $template
-	 * @return string
-	 */
-	protected function getTemplate($template)
-	{
-		$path = realpath(__DIR__.'/../templates/'.$template.'.txt');
+    /**
+     * Get default template.
+     *
+     * @param  string $template
+     * @param array $replacements
+     * @return string
+     */
+    protected function getTemplate($template, $replacements = array())
+    {
 
-		return $this->files->get($path);
-	}
+        $path = realpath(__DIR__ . '/../templates/' . $template . '.txt');
+
+        $content = $this->files->get($path);
+
+        if (!empty($replacements)) {
+            $content = str_replace(array_keys($replacements), array_values($replacements), $content);
+        }
+
+        return $content;
+    }
 
 	/**
 	 * Get the console command arguments.
