@@ -85,8 +85,14 @@ class ThemeGeneratorCommand extends Command {
 
         //assets
         $this->makeDir($this->getAssetsPath('css'));
+        $this->makeAssetsFile('css/.gitkeep', '');
+        $this->makeAssetsFile('css/styles.css', $this->getTemplate('styles.css'));
+
         $this->makeDir($this->getAssetsPath('js'));
+        $this->makeAssetsFile('js/.gitkeep', '');
+
         $this->makeDir($this->getAssetsPath('img'));
+        $this->makeAssetsFile('img/.gitkeep', '');
 
 
 		// Generate inside config.
@@ -109,21 +115,35 @@ class ThemeGeneratorCommand extends Command {
 		}
 	}
 
-	/**
-	 * Make file.
-	 *
-	 * @param  string $file
-	 * @param  string $template
-	 * @return void
-	 */
-	protected function makeFile($file, $template = null)
+    /**
+     * Make file.
+     *
+     * @param  string $file
+     * @param  string $template
+     * @param bool $assets
+     * @return void
+     */
+	protected function makeFile($file, $template = null, $assets = false)
 	{
 		if ( ! $this->files->exists($this->getPath($file)))
 		{
-			$content = $this->getPath($file);
+			$content = $assets ? $this->getAssetsPath($file, true) : $this->getPath($file);
 
 			$this->files->put($content, $template);
 		}
+	}
+
+    /**
+     * Make file.
+     *
+     * @param  string $file
+     * @param  string $template
+     * @internal param bool $assets
+     * @return void
+     */
+	protected function makeAssetsFile($file, $template = null)
+	{
+		$this->makeFile($file, $template, true);
 	}
 
 	/**
