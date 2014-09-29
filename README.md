@@ -7,7 +7,7 @@ Themes are stored inside default laravel's resources folder
 Require this package in your composer.json:
 
 ~~~json
-"yaap/theme": "~2.0"
+"yaap/theme": "dev-develop"
 ~~~
 
 And add the ServiceProvider to the providers array in config/app.php
@@ -19,7 +19,7 @@ And add the ServiceProvider to the providers array in config/app.php
 Publish config using artisan CLI (if you want to overwrite default config).
 
 ~~~bash
-php artisan config:publish yaap/theme
+php artisan publish:config yaap/theme
 ~~~
 
 You can register the facade in the `aliases` key of your `config/app.php` file.
