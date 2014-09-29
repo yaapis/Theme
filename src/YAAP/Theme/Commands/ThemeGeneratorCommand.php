@@ -154,7 +154,7 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected function getPath($path)
 	{
-		$rootPath = $this->config->get('theme::path', app_path('views/themes'));
+		$rootPath = $this->config->get('theme::path', base_path('resources/themes'));
 
 		return $rootPath.'/'.strtolower($this->getTheme()).'/' . $path;
 	}

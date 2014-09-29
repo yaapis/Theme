@@ -1,16 +1,16 @@
 # Theme support for Laravel 4
 
 Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
-Themes are stored inside default laravel's app/views folder
+Themes are stored inside default laravel's resources folder
 
 ## Installation
 Require this package in your composer.json:
 
 ~~~json
-"yaap/theme": "dev-master"
+"yaap/theme": "~2.0"
 ~~~
 
-And add the ServiceProvider to the providers array in app/config/app.php
+And add the ServiceProvider to the providers array in config/app.php
 
 ~~~php
 'YAAP\Theme\ThemeServiceProvider',
@@ -22,7 +22,7 @@ Publish config using artisan CLI (if you want to overwrite default config).
 php artisan config:publish yaap/theme
 ~~~
 
-You can register the facade in the `aliases` key of your `app/config/app.php` file.
+You can register the facade in the `aliases` key of your `config/app.php` file.
 
 ~~~php
 'aliases' => array(
@@ -35,7 +35,7 @@ You can register the facade in the `aliases` key of your `app/config/app.php` fi
 
 ~~~php
 	return array(
-        'path'          => app_path('views/themes'),
+        'path'          => base_path('resources/themes'),
         'assets_path'   => 'assets/themes',
     );
 ~~~
@@ -57,7 +57,7 @@ You can register the facade in the `aliases` key of your `app/config/app.php` fi
 ### Structure
 
 ```
-├── app/views/
+├── resources/
     └── themes/
         ├── default/
         |   ├── layouts/
@@ -68,9 +68,12 @@ You can register the facade in the `aliases` key of your `app/config/app.php` fi
 
         └── admin/
 
-    ├── emails/
-    |   └── notify.blade.php
-    └── errors/
+    ├── views/
+    |   ├── emails/
+    |   |   └── notify.blade.php
+    |   └── hello.blade.php
+    |
+    └── lang/
 
 ├── public/assets/
     └── themes/
@@ -102,8 +105,8 @@ Theme::init($name)
 ~~~
 
 This will add to views find path:
-* app/views/{$name}
-* app/views/{$name}/views
+* resources/themes/{$name}
+* resources/themes/{$name}/views
 
 ### Making view
 
