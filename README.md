@@ -1,4 +1,4 @@
-# Theme support for Laravel 4
+# Theme support for Laravel 5
 
 Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
 Themes are stored inside default laravel's resources folder
@@ -80,7 +80,7 @@ You can register the facade in the `aliases` key of your `config/app.php` file.
 		└── default/
 			├── css/
 			|	└── styles.css
-			└──	images/
+			└── images/
                 └── icon.png
 ```
 
