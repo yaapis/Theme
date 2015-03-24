@@ -23,8 +23,8 @@ class ThemeServiceProvider extends ServiceProvider {
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/path/to/config/courier.php' => config_path('courier.php'),
-        ]);
+            __DIR__.'/../../config/config.php' => config_path('theme.php'),
+        ], 'config');
     }
 
     /**

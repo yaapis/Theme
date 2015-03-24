@@ -3,11 +3,13 @@
 Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
 Themes are stored inside default laravel's resources folder
 
+### For Laravel 4, please use the [1.* branch](https://github.com/yaapis/Theme/tree/1.0)!
+
 ## Installation
 Require this package in your composer.json:
 
 ~~~json
-"yaap/theme": "dev-develop"
+"yaap/theme": "2.*"
 ~~~
 
 And add the ServiceProvider to the providers array in config/app.php
@@ -19,7 +21,7 @@ And add the ServiceProvider to the providers array in config/app.php
 Publish config using artisan CLI (if you want to overwrite default config).
 
 ~~~bash
-php artisan publish:config yaap/theme
+php artisan vendor:publish --tag="config"
 ~~~
 
 You can register the facade in the `aliases` key of your `config/app.php` file.
