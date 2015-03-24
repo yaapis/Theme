@@ -70,7 +70,7 @@ class ThemeGeneratorCommand extends Command {
 
 
 		// Directories.
-		$container = $this->config->get('theme::containerDir');
+		$container = $this->config->get('theme.containerDir');
 
         $this->makeDir($this->getPath($container['layout']));
         $this->makeDir($this->getPath($container['partial']));
@@ -154,7 +154,7 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected function getPath($path)
 	{
-		$rootPath = $this->config->get('theme::path', base_path('resources/themes'));
+		$rootPath = $this->config->get('theme.path', base_path('resources/themes'));
 
 		return $rootPath.'/'.strtolower($this->getTheme()).'/' . $path;
 	}
@@ -168,7 +168,7 @@ class ThemeGeneratorCommand extends Command {
      */
 	protected function getAssetsPath($path, $absolute = true)
 	{
-        $rootPath = $this->config->get('theme::assets_path', 'assets/themes');
+        $rootPath = $this->config->get('theme.assets_path', 'assets/themes');
 
         if ($absolute)
             $rootPath = public_path($rootPath);

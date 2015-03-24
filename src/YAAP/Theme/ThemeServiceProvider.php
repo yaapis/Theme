@@ -22,8 +22,9 @@ class ThemeServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-
-        $this->package('yaap/theme');
+        $this->publishes([
+            __DIR__.'/path/to/config/courier.php' => config_path('courier.php'),
+        ]);
     }
 
     /**
@@ -36,9 +37,16 @@ class ThemeServiceProvider extends ServiceProvider {
 
         // init theme with default finder
         $this->app['theme'] = $this->app->share(function($app) {
-            $theme = new Theme($app, $app['view.finder']);
+            $theme = new Theme($app, $this->app['view']->getFinder());
             return $theme;
         });
+
+
+        // merge & publihs config
+        $configPath = __DIR__ . '/../../config/config.php';
+        $this->mergeConfigFrom($configPath, 'theme');
+        $this->publishes([$configPath => config_path('theme.php')]);
+
 
         // commands
         $this->app['theme.create'] = $this->app->share(function($app)

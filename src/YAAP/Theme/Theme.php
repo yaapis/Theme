@@ -70,13 +70,12 @@ class Theme
      */
     public function init($theme)
     {
-
         if (empty($theme)) throw new ThemeException('Theme name should not be empty');
 
         $this->theme = $theme;
 
         // read theme path
-        $path = $this->app['config']->get('theme::path', base_path('resources/themes'));
+        $path = $this->app['config']->get('theme.path', base_path('resources/themes'));
 
         //init config
         $this->config = $this->_readConfig( $path . '/' . $theme . '/config.php');
@@ -103,6 +102,7 @@ class Theme
                 $this->parents[] = $theme;
             }
         }
+
 
     }
 
