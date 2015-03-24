@@ -3,11 +3,13 @@
 Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
 Themes are stored inside default laravel's app/views folder
 
+### For Laravel 5, please use the [2.* branch](https://github.com/yaapis/Theme)!
+
 ## Installation
 Require this package in your composer.json:
 
 ~~~json
-"yaap/theme": "dev-master"
+"yaap/theme": "1.*"
 ~~~
 
 And add the ServiceProvider to the providers array in app/config/app.php
