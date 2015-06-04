@@ -107,6 +107,29 @@ class Theme
     }
 
     /**
+     * Returns the list of available themes names in an array.
+     *
+     * @return array
+     */
+    public function getList()
+    {
+        // read theme path
+        $path = $this->app['config']->get('theme.path', base_path('resources/themes'));
+
+        if (file_exists($path))
+        {
+            $dir_list = dir($path);
+            while (false !== ($entry = $dir_list->read())) {
+                if (file_exists($path . '/' . $entry . '/' . 'config.php'))
+                    $list[] = $entry;
+            }
+        }
+
+        return $list;
+
+    }
+
+    /**
      * Generate an asset path for current theme.
      *
      * @param $path
