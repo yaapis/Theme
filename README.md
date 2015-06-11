@@ -15,7 +15,7 @@ Require this package in your composer.json:
 And add the ServiceProvider to the providers array in config/app.php
 
 ~~~php
-'YAAP\Theme\ThemeServiceProvider',
+YAAP\Theme\ThemeServiceProvider::class,
 ~~~
 
 Publish config using artisan CLI (if you want to overwrite default config).
@@ -28,7 +28,7 @@ You can register the facade in the `aliases` key of your `config/app.php` file.
 
 ~~~php
 'aliases' => array(
-    'Theme' => 'YAAP\Theme\Facades\Theme'
+    'Theme'     => YAAP\Theme\Facades\Theme::class,
 )
 ~~~
 
