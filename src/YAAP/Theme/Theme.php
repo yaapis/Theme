@@ -197,7 +197,7 @@ class Theme
             return $this->cache[$path];
         }
 
-        $assets_path = trim($this->app['config']->get('theme::assets_path', 'assets/themes'), '/');
+        $assets_path = trim($this->app['config']->get('theme.assets_path', 'assets/themes'), '/');
 
         $full_path = $assets_path . '/' . $this->theme . '/' . $path;
 
