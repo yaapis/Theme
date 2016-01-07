@@ -126,7 +126,7 @@ Asset url can be automatically with version.
 <link rel="stylesheet" href="{{ Theme::asset('css/ie.css', null, 'v1') }}"/>
 ~~~
 
-The first one will get version from filemtime, the second one - from params
+The first one will get version from `filemtime`, the second one - from params
 
 
 ###Blade templates
@@ -149,4 +149,4 @@ The first one will get version from filemtime, the second one - from params
 
 ###Fallback capability
 
-You still able to use default `View::make('emails.notify')` whitch stored outside the themes directory
+You still able to use default `View::make('emails.notify')` which is stored outside the themes directory
