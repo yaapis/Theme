@@ -1,6 +1,6 @@
 {
     "name": "yaap/theme",
-    "description": "Theme support for Laravel 4\5 with assets, theme extends etc.",
+    "description": "Theme support for Laravel 4/5 with assets, theme extends etc.",
     "keywords": [
         "laravel",
         "theme",
