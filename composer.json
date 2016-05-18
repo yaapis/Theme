@@ -1,11 +1,17 @@
 {
     "name": "yaap/theme",
-    "description": "",
+    "description": "Theme support for Laravel 4\5 with assets, theme extends etc.",
+    "keywords": [
+        "laravel",
+        "theme",
+        "layout", 
+        "asset"
+    ],
     "license": "MIT",
     "authors": [
         {
             "name": "Biluk Andrey",
-            "email": "biluk.a@newway.com.ua"
+            "email": "yaapis@gmail.com"
         }
     ],
     "require": {
