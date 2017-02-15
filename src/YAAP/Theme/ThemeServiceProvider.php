@@ -36,34 +36,31 @@ class ThemeServiceProvider extends ServiceProvider {
 	{
 
         // init theme with default finder
-        $this->app['theme'] = $this->app->share(function($app) {
+        $this->app->singleton('theme', function($app) {
             $theme = new Theme($app, $this->app['view']->getFinder());
             return $theme;
         });
 
 
-        // merge & publihs config
+        // merge & publish config
         $configPath = __DIR__ . '/../../config/config.php';
         $this->mergeConfigFrom($configPath, 'theme');
         $this->publishes([$configPath => config_path('theme.php')]);
 
 
-        // commands
-        $this->app['theme.create'] = $this->app->share(function($app)
-        {
+        $this->app->singleton('theme.create',function ($app) {
             return new Commands\ThemeGeneratorCommand($app['config'], $app['files']);
         });
 
-        $this->app['theme.destroy'] = $this->app->share(function($app)
-        {
+        $this->app->singleton('theme.destroy',function ($app) {
             return new Commands\ThemeDestroyCommand($app['config'], $app['files']);
         });
 
-        // Assign commands.
         $this->commands(
             'theme.create',
             'theme.destroy'
         );
+
 
 	}
 
