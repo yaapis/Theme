@@ -60,7 +60,7 @@ class ThemeGeneratorCommand extends Command {
 	 *
 	 * @return void
 	 */
-	public function fire()
+	public function handle()
 	{
 		// The theme is already exists.
 		if ($this->files->isDirectory($this->getPath(null)))
