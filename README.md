@@ -48,7 +48,7 @@ You can register the facade in the `aliases` key of your `config/app.php` file.
 ~~~php
 	return array(
         'name'         => 'default',
-        'parent_theme' => null,
+        'inherit' => null,
     );
 ~~~
 
