@@ -15,8 +15,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "laravel/framework": "5.4.*",
+        "php": ">=7.0",
+        "laravel/framework": "5.*",
         "illuminate/support": "5.*"
     },
     "autoload": {
@@ -24,5 +24,17 @@
             "YAAP\\Theme": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "YAAP\\Theme\\ThemeServiceProvider"
+            ],
+            "aliases": {
+                "Theme": "YAAP\\Theme\\Facades\\Theme"
+            }
+        }
+    }
+
 }
