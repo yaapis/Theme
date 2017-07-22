@@ -91,7 +91,7 @@ class Theme
             $this->finder->addLocation($path . '/' . $theme);
 
             // add folder with views
-            $this->finder->addLocation($path . '/' . $theme . '/views');
+            $this->finder->addLocation($path . '/' . $theme . '/' . config('theme.containerDir.view'));
 
             // read theme config
             $current_theme_config = $this->_readConfig($path . '/' . $theme . '/config.php');
