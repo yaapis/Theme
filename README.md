@@ -1,37 +1,29 @@
-# Theme support for Laravel 5
+# Theme support for Laravel 6 | 5
 
 Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
 Themes are stored inside default laravel's resources folder
 
-### For Laravel 4, please use the [1.* branch](https://github.com/yaapis/Theme/tree/1.0)!
 
 ## Installation
 Require this package in your composer.json:
 
+~~~bash
+composer require yaap/theme
+~~~
+
+Or manually add 
+
 ~~~json
-"yaap/theme": "2.*"
+"yaap/theme": "3.*"
 ~~~
 
-And add the ServiceProvider to the providers array in config/app.php
 
-~~~php
-'YAAP\Theme\ThemeServiceProvider',
-~~~
 
-Publish config using artisan CLI (if you want to overwrite default config).
+Optionally, publish config using artisan CLI (if you want to overwrite default config).
 
 ~~~bash
-php artisan vendor:publish --tag="config"
+php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ~~~
-
-You can register the facade in the `aliases` key of your `config/app.php` file.
-
-~~~php
-'aliases' => array(
-    'Theme' => 'YAAP\Theme\Facades\Theme'
-)
-~~~
-
 
 ## Package config
 
@@ -150,3 +142,13 @@ The first one will get version from `filemtime`, the second one - from params
 ###Fallback capability
 
 You still able to use default `View::make('emails.notify')` which is stored outside the themes directory
+
+## Can I hire you guys?
+Yes! Say hi: [hello@hexide-digital.com](mailto:hello@hexide-digital.com) </br>
+We will be happy to work with you! Other [work we’ve done](https://hexide-digital.com/)
+
+## Follow us
+Stay up to date with the latest Vuestic news! Follow us on [LinkedIn](https://www.linkedin.com/company/hexide-digital) or [Facebook](https://www.facebook.com/hexide.digital)
+
+## License
+[MIT](https://github.com/epicmaxco/vuestic-admin/blob/master/LICENSE) license.

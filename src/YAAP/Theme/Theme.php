@@ -192,7 +192,7 @@ class Theme
 
         $path = trim($path, '/');
 
-        // alredy processed
+        // already processed
         if (isset($this->cache[$path])) {
             return $this->cache[$path];
         }
