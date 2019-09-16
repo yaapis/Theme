@@ -3,6 +3,7 @@
 use Illuminate\Container\Container;
 use Illuminate\View\ViewFinderInterface;
 use YAAP\Theme\Exceptions\ThemeException;
+use Illuminate\Support\Arr;
 
 /**
  * Class Theme
@@ -96,7 +97,7 @@ class Theme
             // read theme config
             $current_theme_config = $this->_readConfig($path . '/' . $theme . '/config.php');
 
-            $theme = array_get($current_theme_config, 'inherit');
+            $theme = Arr::get($current_theme_config, 'inherit');
 
             if (!empty($theme)) {
                 $this->parents[] = $theme;
