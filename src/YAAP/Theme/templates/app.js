@@ -1,6 +1,7 @@
 class Foo {
     constructor() {
-            console.log('Foo init');
-        }
-
+        console.log('Foo constructor');
+    }
 }
+
+new Foo();

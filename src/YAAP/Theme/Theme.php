@@ -131,107 +131,6 @@ class Theme
     }
 
     /**
-     * Generate an asset path for current theme.
-     *
-     * @param $path
-     * @param null $secure
-     * @param bool $version
-     * @throws Exceptions\ThemeException
-     * @return mixed
-     */
-    public function asset($path, $secure = null, $version = false)
-    {
-
-        if (!$this->theme) throw new ThemeException('Theme should be init first');
-
-        $full_path = $this->_assetFullpath($path);
-
-        $asset = $this->app['url']->asset($full_path, $secure);
-
-        if ($version) {
-
-            if (is_bool($version)) {
-                $asset .= '?v=' . $this->_assetVersion($path);
-            } else {
-                $asset .= '?v=' . $version;
-            }
-        }
-
-        return $asset;
-
-    }
-
-    /**
-     * Return filemtime of given asset or null if asset doesn't exists
-     *
-     * @param $path
-     * @return int|null
-     */
-    private function _assetVersion($path)
-    {
-
-        $full_path = $this->_assetFullpath($path);
-
-        $file_path = public_path($full_path);
-
-        if (file_exists($file_path)) {
-            return filemtime($file_path);
-        }
-
-        return null;
-    }
-
-    /**
-     *
-     * Try to find asset file in current theme or in parents
-     *
-     * @param $path
-     * @return string
-     */
-    private function _assetFullpath($path)
-    {
-
-        $path = trim($path, '/');
-
-        // already processed
-        if (isset($this->cache[$path])) {
-            return $this->cache[$path];
-        }
-
-        $assets_path = trim($this->app['config']->get('theme.assets_path', 'assets/themes'), '/');
-
-        $full_path = $assets_path . '/' . $this->theme . '/' . $path;
-
-        // theme has this asset
-        if (!file_exists(public_path($full_path))) {
-
-            $found = false;
-
-            // loop over parents
-            foreach ($this->parents as $parent) {
-
-                $full_path = $assets_path . '/' . $parent . '/' . $path;
-
-                if (file_exists(public_path($full_path))) {
-                    $found = true;
-                    break;
-                }
-            }
-
-            // in case of failure to find asset - return default theme asset
-            // (404 error will be signal of promlems)
-            if (!$found) {
-                $full_path = $assets_path . '/' . $this->theme . '/' . $path;
-            }
-
-        }
-
-        $this->cache[$path] = $full_path;
-
-        return $full_path;
-    }
-
-    /**
      * @param $path
      * @return array|mixed
      */
@@ -243,4 +142,4 @@ class Theme
     }
 
 }
- 
+

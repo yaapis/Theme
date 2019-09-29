@@ -86,13 +86,14 @@ class ThemeGeneratorCommand extends Command {
         //lang
         $this->makeDir($this->getPath($container['lang']));
         $this->makeDir($this->getPath($container['lang'].'/en'));
-        $this->makeFile($container['lang'].'/en/'.$this->getTheme().'.php', $this->getTemplate('lang.php'));
+        $this->makeFile($container['lang'].'/en/labels.php', $this->getTemplate('lang.php'));
 
         // frontend sources
         $this->makeDir($this->getPath($container['assets']));
         //sass
         $this->makeDir($this->getPath($container['assets'].'/sass'));
-        $this->makeFile($container['assets'].'/sass/styles.scss', $this->getTemplate('styles.sass'));
+        $this->makeFile($container['assets'].'/sass/_variables.scss', $this->getTemplate('_variables.scss'));
+        $this->makeFile($container['assets'].'/sass/app.scss', $this->getTemplate('app.scss'));
 
         //js
         $this->makeDir($this->getPath($container['assets'].'/js'));
@@ -102,6 +103,8 @@ class ThemeGeneratorCommand extends Command {
         $this->makeDir($this->getPath($container['assets'].'/img'));
         $this->makeFile($container['assets'].'/img/favicon.png', $this->getTemplate('favicon.png'));
 
+        // fonts
+        $this->makeDir($this->getPath($container['assets'].'/fonts'));
 
         //public assets
         $this->makeDir($this->getAssetsPath('css'));
@@ -112,6 +115,9 @@ class ThemeGeneratorCommand extends Command {
 
         $this->makeDir($this->getAssetsPath('img'));
         $this->makeAssetsFile('img/.gitkeep', '');
+
+        $this->makeDir($this->getAssetsPath('fonts'));
+        $this->makeAssetsFile('fonts/.gitkeep', '');
 
 
 		// Generate inside config.

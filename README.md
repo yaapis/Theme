@@ -110,15 +110,15 @@ View::make('emails.notify');
 ~~~
 
 ### Assets
-Assets can be nested too.
-Asset url can be automatically with version.
+Use laravel mix for assets.
 
 ~~~css
-<link rel="stylesheet" href="{{ Theme::asset('css/styles.css', null, true) }}"/>
-<link rel="stylesheet" href="{{ Theme::asset('css/ie.css', null, 'v1') }}"/>
+<link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
 ~~~
 
-The first one will get version from `filemtime`, the second one - from params
+~~~js
+<script type="text/javascript" src="{{ mix('/themes/default/js/app.min.js') }}"></script>
+~~~
 
 
 ###Blade templates

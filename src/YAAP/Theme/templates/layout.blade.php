@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
-<head>
+	<head>
+		<link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
+	</head>
+	<body>
+		<div>@include('partials.header')</div>
 
-<link rel="stylesheet" href="{{ Theme::asset('css/styles.css', null, true) }}"/>
+		<div>@yield('content')</div>
 
-</head>
-<body>
+		<div>@include('partials.footer')</div>
 
-	<div>@include('partials.header')</div>
-
-	<div>@yield('content')</div>
-
-	<div>@include('partials.footer')</div>
-
-</body>
+		<script type="text/javascript" src="{{ mix('/themes/default/js/app.min.js') }}"></script>
+	</body>
 </html>
