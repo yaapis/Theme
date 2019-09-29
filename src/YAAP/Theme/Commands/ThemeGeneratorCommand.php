@@ -114,7 +114,7 @@ class ThemeGeneratorCommand extends Command {
 
 
 		// Generate inside config.
-		$this->makeFile('config.php', $this->getTemplate('config', ['%theme_name%' => $this->getTheme()]));
+		$this->makeFile('config.php', $this->getTemplate('config.php', ['%theme_name%' => $this->getTheme()]));
 
 		$this->info('Theme "'.$this->getTheme().'" has been created.');
 	}
