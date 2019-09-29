@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
 @section('content')
-    CONTENT
+    @lang('default::labels.intro')
 @stop
 

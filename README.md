@@ -51,18 +51,17 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ### Structure
 
 ```
-├── resources/
-    └── themes/
-        ├── default/
-        |   ├── assets/        
-            ├── lang/        
-            ├── layouts/
-            ├── partials/
-            ├── views/
-	        |   └── hello.blade.php
-	        └── config.php
+├── themes/
+    ├── default/
+    |   ├── assets/        
+        ├── lang/        
+        ├── layouts/
+        ├── partials/
+        ├── views/
+        |   └── hello.blade.php
+        └── config.php
 
-        └── admin/
+    └── admin/
 
     ├── views/
     |   ├── emails/
@@ -86,6 +85,12 @@ The first time you have to create theme "default" structure, using the artisan c
 php artisan theme:create default
 ~~~
 
+In order to seed webpack.mix.js with custom rules add --with-mix option
+
+~~~bash
+php artisan theme:create default --with-mix
+~~~
+
 To delete an existing theme, use the command:
 
 ~~~bash
@@ -99,8 +104,11 @@ Theme::init($name)
 ~~~
 
 This will add to views find path:
-* resources/themes/{$name}
-* resources/themes/{$name}/views
+* themes/{$name}
+* themes/{$name}/views
+
+Lang files will be added as well:
+* themes/{$name}/lang
 
 ### Making view
 

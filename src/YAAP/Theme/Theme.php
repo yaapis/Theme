@@ -4,6 +4,7 @@ use Illuminate\Container\Container;
 use Illuminate\View\ViewFinderInterface;
 use YAAP\Theme\Exceptions\ThemeException;
 use Illuminate\Support\Arr;
+use Illuminate\Contracts\Translation\Loader;
 
 /**
  * Class Theme
@@ -25,6 +26,13 @@ class Theme
      */
 
     protected $finder;
+
+    /**
+     * Default locale loader
+     *
+     */
+
+    protected $localeLoader;
 
     /**
      * theme config
@@ -54,12 +62,14 @@ class Theme
      * @param Container $app
      * @param ViewFinderInterface $finder
      */
-    public function __construct(Container $app, ViewFinderInterface $finder)
+    public function __construct(Container $app, ViewFinderInterface $finder, Loader $localeLoader)
     {
 
         $this->app = $app;
 
         $this->finder = $finder;
+
+        $this->localeLoader = $localeLoader;
     }
 
 
@@ -104,6 +114,7 @@ class Theme
             }
         }
 
+        $this->localeLoader->addNamespace($this->theme, $path . '/' . $this->theme . '/' . 'lang');
 
     }
 

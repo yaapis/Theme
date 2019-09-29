@@ -37,7 +37,7 @@ class ThemeServiceProvider extends ServiceProvider {
 
         // init theme with default finder
         $this->app->singleton('theme', function($app) {
-            $theme = new Theme($app, $this->app['view']->getFinder());
+            $theme = new Theme($app, $this->app['view']->getFinder(), $this->app['translator']->getLoader());
             return $theme;
         });
 
