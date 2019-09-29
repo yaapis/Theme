@@ -40,7 +40,7 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ~~~php
 	return array(
         'name'         => 'default',
-        'inherit' => null,
+        'inherit'      => null,
     );
 ~~~
 
