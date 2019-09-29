@@ -16,7 +16,10 @@ class ThemeGeneratorCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'theme:create';
+
+    protected $signature = 'theme:create 
+                            {name : A name of the new theme}
+                            {--with-mix : Seed webpack.mix.js with themes specific}';
 
 	/**
 	 * The console command description.
@@ -122,6 +125,13 @@ class ThemeGeneratorCommand extends Command {
 
 		// Generate inside config.
 		$this->makeFile('config.php', $this->getTemplate('config.php', ['%theme_name%' => $this->getTheme()]));
+
+		// mix
+        $withMix = $this->option('with-mix');
+        if ($withMix) {
+            $this->info('Seeding webpack.mix.js');
+            $this->files->append(base_path('webpack.mix.js'), $this->getTemplate('mix.js', ['%theme_name%' => $this->getTheme()]));
+        }
 
 		$this->info('Theme "'.$this->getTheme().'" has been created.');
 	}
