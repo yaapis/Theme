@@ -76,7 +76,7 @@ class Theme
         $this->theme = $theme;
 
         // read theme path
-        $path = $this->app['config']->get('theme.path', base_path('resources/themes'));
+        $path = $this->app['config']->get('theme.path', base_path('themes'));
 
         //init config
         $this->config = $this->_readConfig( $path . '/' . $theme . '/config.php');
@@ -115,7 +115,7 @@ class Theme
     public function getList()
     {
         // read theme path
-        $path = $this->app['config']->get('theme.path', base_path('resources/themes'));
+        $path = $this->app['config']->get('theme.path', base_path('themes'));
 
         if (file_exists($path))
         {
