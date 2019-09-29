@@ -14,7 +14,7 @@ composer require yaap/theme
 Or manually add 
 
 ~~~json
-"yaap/theme": "3.*"
+"yaap/theme": "4.*"
 ~~~
 
 
@@ -30,7 +30,7 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ~~~php
 	return array(
         'path'          => base_path('resources/themes'),
-        'assets_path'   => 'assets/themes',
+        'assets_path'   => 'themes',
     );
 ~~~
 
@@ -54,7 +54,9 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ├── resources/
     └── themes/
         ├── default/
-        |   ├── layouts/
+        |   ├── assets/        
+            ├── lang/        
+            ├── layouts/
             ├── partials/
             ├── views/
 	        |   └── hello.blade.php
@@ -66,10 +68,8 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
     |   ├── emails/
     |   |   └── notify.blade.php
     |   └── hello.blade.php
-    |
-    └── lang/
 
-├── public/assets/
+├── public/
     └── themes/
 		└── default/
 			├── css/
