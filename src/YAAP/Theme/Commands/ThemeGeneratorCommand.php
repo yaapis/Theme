@@ -108,6 +108,7 @@ class ThemeGeneratorCommand extends Command {
         $this->makeAssetsFile('css/.gitkeep', '');
 
         $this->makeDir($this->getAssetsPath('js'));
+        $this->makeAssetsFile('js/.gitkeep', '');
 
         $this->makeDir($this->getAssetsPath('img'));
         $this->makeAssetsFile('img/.gitkeep', '');
