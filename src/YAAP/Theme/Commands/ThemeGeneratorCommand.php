@@ -16,7 +16,10 @@ class ThemeGeneratorCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'theme:create';
+
+    protected $signature = 'theme:create 
+                            {name : A name of the new theme}
+                            {--with-mix : Seed webpack.mix.js with themes specific}';
 
 	/**
 	 * The console command description.
@@ -76,17 +79,39 @@ class ThemeGeneratorCommand extends Command {
         $this->makeDir($this->getPath($container['partial']));
         $this->makeDir($this->getPath($container['view']));
 
-        $this->makeFile($container['layout'].'/master.blade.php', $this->getTemplate('layout.blade'));
-        $this->makeFile($container['partial'].'/header.blade.php', $this->getTemplate('header.blade'));
-        $this->makeFile($container['partial'].'/footer.blade.php', $this->getTemplate('footer.blade'));
-        $this->makeFile($container['view'].'/hello.blade.php', $this->getTemplate('view.blade'));
+
+        $this->makeFile($container['layout'].'/master.blade.php', $this->getTemplate('layout.blade.php'));
+        $this->makeFile($container['partial'].'/header.blade.php', $this->getTemplate('header.blade.php'));
+        $this->makeFile($container['partial'].'/footer.blade.php', $this->getTemplate('footer.blade.php'));
+        $this->makeFile($container['view'].'/hello.blade.php', $this->getTemplate('view.blade.php'));
 
 
+        //lang
+        $this->makeDir($this->getPath($container['lang']));
+        $this->makeDir($this->getPath($container['lang'].'/en'));
+        $this->makeFile($container['lang'].'/en/labels.php', $this->getTemplate('lang.php'));
 
-        //assets
+        // frontend sources
+        $this->makeDir($this->getPath($container['assets']));
+        //sass
+        $this->makeDir($this->getPath($container['assets'].'/sass'));
+        $this->makeFile($container['assets'].'/sass/_variables.scss', $this->getTemplate('_variables.scss'));
+        $this->makeFile($container['assets'].'/sass/app.scss', $this->getTemplate('app.scss'));
+
+        //js
+        $this->makeDir($this->getPath($container['assets'].'/js'));
+        $this->makeFile($container['assets'].'/js/app.js', $this->getTemplate('app.js'));
+
+        // img
+        $this->makeDir($this->getPath($container['assets'].'/img'));
+        $this->makeFile($container['assets'].'/img/favicon.png', $this->getTemplate('favicon.png'));
+
+        // fonts
+        $this->makeDir($this->getPath($container['assets'].'/fonts'));
+
+        //public assets
         $this->makeDir($this->getAssetsPath('css'));
         $this->makeAssetsFile('css/.gitkeep', '');
-        $this->makeAssetsFile('css/styles.css', $this->getTemplate('styles.css'));
 
         $this->makeDir($this->getAssetsPath('js'));
         $this->makeAssetsFile('js/.gitkeep', '');
@@ -94,9 +119,19 @@ class ThemeGeneratorCommand extends Command {
         $this->makeDir($this->getAssetsPath('img'));
         $this->makeAssetsFile('img/.gitkeep', '');
 
+        $this->makeDir($this->getAssetsPath('fonts'));
+        $this->makeAssetsFile('fonts/.gitkeep', '');
+
 
 		// Generate inside config.
-		$this->makeFile('config.php', $this->getTemplate('config', ['%theme_name%' => $this->getTheme()]));
+		$this->makeFile('config.php', $this->getTemplate('config.php', ['%theme_name%' => $this->getTheme()]));
+
+		// mix
+        $withMix = $this->option('with-mix');
+        if ($withMix) {
+            $this->info('Seeding webpack.mix.js');
+            $this->files->append(base_path('webpack.mix.js'), $this->getTemplate('mix.js', ['%theme_name%' => $this->getTheme()]));
+        }
 
 		$this->info('Theme "'.$this->getTheme().'" has been created.');
 	}
@@ -154,7 +189,7 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected function getPath($path)
 	{
-		$rootPath = $this->config->get('theme.path', base_path('resources/themes'));
+		$rootPath = $this->config->get('theme.path', base_path('themes'));
 
 		return $rootPath.'/'.strtolower($this->getTheme()).'/' . $path;
 	}
@@ -168,7 +203,7 @@ class ThemeGeneratorCommand extends Command {
      */
 	protected function getAssetsPath($path, $absolute = true)
 	{
-        $rootPath = $this->config->get('theme.assets_path', 'assets/themes');
+        $rootPath = $this->config->get('theme.assets_path', 'themes');
 
         if ($absolute)
             $rootPath = public_path($rootPath);
@@ -196,7 +231,7 @@ class ThemeGeneratorCommand extends Command {
     protected function getTemplate($template, $replacements = array())
     {
 
-        $path = realpath(__DIR__ . '/../templates/' . $template . '.txt');
+        $path = realpath(__DIR__ . '/../templates/' . $template);
 
         $content = $this->files->get($path);
 

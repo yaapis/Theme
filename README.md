@@ -14,7 +14,7 @@ composer require yaap/theme
 Or manually add 
 
 ~~~json
-"yaap/theme": "3.*"
+"yaap/theme": "4.*"
 ~~~
 
 
@@ -30,7 +30,7 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ~~~php
 	return array(
         'path'          => base_path('resources/themes'),
-        'assets_path'   => 'assets/themes',
+        'assets_path'   => 'themes',
     );
 ~~~
 
@@ -40,7 +40,7 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ~~~php
 	return array(
         'name'         => 'default',
-        'inherit' => null,
+        'inherit'      => null,
     );
 ~~~
 
@@ -51,25 +51,24 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ### Structure
 
 ```
-├── resources/
-    └── themes/
-        ├── default/
-        |   ├── layouts/
-            ├── partials/
-            ├── views/
-	        |   └── hello.blade.php
-	        └── config.php
+├── themes/
+    ├── default/
+    |   ├── assets/        
+        ├── lang/        
+        ├── layouts/
+        ├── partials/
+        ├── views/
+        |   └── hello.blade.php
+        └── config.php
 
-        └── admin/
+    └── admin/
 
     ├── views/
     |   ├── emails/
     |   |   └── notify.blade.php
     |   └── hello.blade.php
-    |
-    └── lang/
 
-├── public/assets/
+├── public/
     └── themes/
 		└── default/
 			├── css/
@@ -86,6 +85,12 @@ The first time you have to create theme "default" structure, using the artisan c
 php artisan theme:create default
 ~~~
 
+In order to seed webpack.mix.js with custom rules add --with-mix option
+
+~~~bash
+php artisan theme:create default --with-mix
+~~~
+
 To delete an existing theme, use the command:
 
 ~~~bash
@@ -99,8 +104,11 @@ Theme::init($name)
 ~~~
 
 This will add to views find path:
-* resources/themes/{$name}
-* resources/themes/{$name}/views
+* themes/{$name}
+* themes/{$name}/views
+
+Lang files will be added as well:
+* themes/{$name}/lang
 
 ### Making view
 
@@ -110,15 +118,15 @@ View::make('emails.notify');
 ~~~
 
 ### Assets
-Assets can be nested too.
-Asset url can be automatically with version.
+Use laravel mix for assets.
 
 ~~~css
-<link rel="stylesheet" href="{{ Theme::asset('css/styles.css', null, true) }}"/>
-<link rel="stylesheet" href="{{ Theme::asset('css/ie.css', null, 'v1') }}"/>
+<link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
 ~~~
 
-The first one will get version from `filemtime`, the second one - from params
+~~~js
+<script type="text/javascript" src="{{ mix('/themes/default/js/app.min.js') }}"></script>
+~~~
 
 
 ###Blade templates

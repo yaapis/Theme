@@ -4,6 +4,7 @@ use Illuminate\Container\Container;
 use Illuminate\View\ViewFinderInterface;
 use YAAP\Theme\Exceptions\ThemeException;
 use Illuminate\Support\Arr;
+use Illuminate\Contracts\Translation\Loader;
 
 /**
  * Class Theme
@@ -25,6 +26,13 @@ class Theme
      */
 
     protected $finder;
+
+    /**
+     * Default locale loader
+     *
+     */
+
+    protected $localeLoader;
 
     /**
      * theme config
@@ -54,12 +62,14 @@ class Theme
      * @param Container $app
      * @param ViewFinderInterface $finder
      */
-    public function __construct(Container $app, ViewFinderInterface $finder)
+    public function __construct(Container $app, ViewFinderInterface $finder, Loader $localeLoader)
     {
 
         $this->app = $app;
 
         $this->finder = $finder;
+
+        $this->localeLoader = $localeLoader;
     }
 
 
@@ -76,7 +86,7 @@ class Theme
         $this->theme = $theme;
 
         // read theme path
-        $path = $this->app['config']->get('theme.path', base_path('resources/themes'));
+        $path = $this->app['config']->get('theme.path', base_path('themes'));
 
         //init config
         $this->config = $this->_readConfig( $path . '/' . $theme . '/config.php');
@@ -104,6 +114,7 @@ class Theme
             }
         }
 
+        $this->localeLoader->addNamespace($this->theme, $path . '/' . $this->theme . '/' . 'lang');
 
     }
 
@@ -115,7 +126,7 @@ class Theme
     public function getList()
     {
         // read theme path
-        $path = $this->app['config']->get('theme.path', base_path('resources/themes'));
+        $path = $this->app['config']->get('theme.path', base_path('themes'));
 
         if (file_exists($path))
         {
@@ -131,107 +142,6 @@ class Theme
     }
 
     /**
-     * Generate an asset path for current theme.
-     *
-     * @param $path
-     * @param null $secure
-     * @param bool $version
-     * @throws Exceptions\ThemeException
-     * @return mixed
-     */
-    public function asset($path, $secure = null, $version = false)
-    {
-
-        if (!$this->theme) throw new ThemeException('Theme should be init first');
-
-        $full_path = $this->_assetFullpath($path);
-
-        $asset = $this->app['url']->asset($full_path, $secure);
-
-        if ($version) {
-
-            if (is_bool($version)) {
-                $asset .= '?v=' . $this->_assetVersion($path);
-            } else {
-                $asset .= '?v=' . $version;
-            }
-        }
-
-        return $asset;
-
-    }
-
-    /**
-     * Return filemtime of given asset or null if asset doesn't exists
-     *
-     * @param $path
-     * @return int|null
-     */
-    private function _assetVersion($path)
-    {
-
-        $full_path = $this->_assetFullpath($path);
-
-        $file_path = public_path($full_path);
-
-        if (file_exists($file_path)) {
-            return filemtime($file_path);
-        }
-
-        return null;
-    }
-
-    /**
-     *
-     * Try to find asset file in current theme or in parents
-     *
-     * @param $path
-     * @return string
-     */
-    private function _assetFullpath($path)
-    {
-
-        $path = trim($path, '/');
-
-        // already processed
-        if (isset($this->cache[$path])) {
-            return $this->cache[$path];
-        }
-
-        $assets_path = trim($this->app['config']->get('theme.assets_path', 'assets/themes'), '/');
-
-        $full_path = $assets_path . '/' . $this->theme . '/' . $path;
-
-        // theme has this asset
-        if (!file_exists(public_path($full_path))) {
-
-            $found = false;
-
-            // loop over parents
-            foreach ($this->parents as $parent) {
-
-                $full_path = $assets_path . '/' . $parent . '/' . $path;
-
-                if (file_exists(public_path($full_path))) {
-                    $found = true;
-                    break;
-                }
-            }
-
-            // in case of failure to find asset - return default theme asset
-            // (404 error will be signal of promlems)
-            if (!$found) {
-                $full_path = $assets_path . '/' . $this->theme . '/' . $path;
-            }
-
-        }
-
-        $this->cache[$path] = $full_path;
-
-        return $full_path;
-    }
-
-    /**
      * @param $path
      * @return array|mixed
      */
@@ -243,4 +153,4 @@ class Theme
     }
 
 }
- 
+
