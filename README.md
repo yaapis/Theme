@@ -1,4 +1,4 @@
-# Theme support for Laravel 6 | 5
+# Theme support for Laravel
 
 Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
 Themes are stored inside default laravel's resources folder
@@ -46,7 +46,7 @@ php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 
 
 
-##Usage
+## Usage
 
 ### Structure
 
@@ -97,7 +97,7 @@ To delete an existing theme, use the command:
 php artisan theme:destroy default
 ~~~
 
-###Init theme
+### Init theme
 
 ~~~php
 Theme::init($name)
