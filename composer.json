@@ -4,7 +4,7 @@
     "keywords": [
         "laravel",
         "theme",
-        "layout", 
+        "layout",
         "asset"
     ],
     "license": "MIT",
@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "laravel/framework": "^8.0"
+        "laravel/framework": "^8.0|^9.0"
     },
     "autoload": {
         "psr-0": {
