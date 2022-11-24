@@ -3,3 +3,5 @@ composer.phar
 composer.lock
 .DS_Store
 .idea
+.php-cs-fixer.cache
+php-cs-fixer.php

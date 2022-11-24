@@ -1,3 +1,11 @@
-<?php namespace YAAP\Theme\Exceptions;
+<?php
 
-class ThemeException extends \Exception {}
+declare(strict_types=1);
+
+namespace YAAP\Theme\Exceptions;
+
+use Exception;
+
+class ThemeException extends Exception
+{
+}
