@@ -1,7 +1,8 @@
 <?php
 
-return array(
+declare(strict_types=1);
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Path to directory with themes
@@ -11,17 +12,19 @@ return array(
     |
     */
 
-        'path'         => base_path('themes'),
+    'path' => base_path('themes'),
+
     /*
     |--------------------------------------------------------------------------
-    | Path to directory with assets
+    | Path to directory with assets build
     |--------------------------------------------------------------------------
     |
-    | The directory with assets.
+    | The directory with assets build in public directory.
     |
     */
 
-        'assets_path'  => 'themes',
+    'assets_path' => 'themes',
+
     /*
     |--------------------------------------------------------------------------
     | A pieces of theme collections
@@ -32,13 +35,11 @@ return array(
     |
     */
 
-        'containerDir' => array(
-            'assets' => 'assets',
-            'lang' => 'lang',
-            'layout' => 'layouts',
-            'partial' => 'partials',
-            'view' => 'views',
-        ),
-
-
-);
+    'containerDir' => [
+        'assets' => 'assets',
+        'lang' => 'lang',
+        'layout' => 'layouts',
+        'partial' => 'partials',
+        'view' => 'views',
+    ],
+];

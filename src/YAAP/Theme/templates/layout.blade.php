@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
-	</head>
-	<body>
-		<div>@include('partials.header')</div>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-		<div>@yield('content')</div>
+<head>
+    <title>default theme</title>
+    <link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
+</head>
 
-		<div>@include('partials.footer')</div>
+<body>
 
-		<script type="text/javascript" src="{{ mix('/themes/default/js/app.min.js') }}"></script>
-	</body>
+<div>@include('partials.header')</div>
+
+<div>@yield('content')</div>
+
+<div>@include('partials.footer')</div>
+
+<script type="text/javascript" src="{{ mix('/themes/default/js/app.min.js') }}"></script>
+
+</body>
+
 </html>

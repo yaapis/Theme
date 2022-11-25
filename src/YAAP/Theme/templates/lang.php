@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Theme language variables
@@ -9,5 +8,4 @@ return [
     */
 
     'intro' => 'This is a default lable',
-
 ];

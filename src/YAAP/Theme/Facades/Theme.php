@@ -1,15 +1,18 @@
-<?php namespace YAAP\Theme\Facades;
+<?php
+
+namespace YAAP\Theme\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Theme extends Facade {
-
+class Theme extends Facade
+{
     /**
-    * Get the registered name of the component.
-    *
-    * @return string
-    */
-    protected static function getFacadeAccessor() { return 'theme'; }
-
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'theme';
+    }
 }
-

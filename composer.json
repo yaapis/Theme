@@ -1,6 +1,6 @@
 {
     "name": "yaap/theme",
-    "description": "Theme support for Laravel 4/5/6 with assets, theme extends etc.",
+    "description": "Theme support for Laravel 8/9 with assets, theme extends etc.",
     "keywords": [
         "laravel",
         "theme",
@@ -15,13 +15,17 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "laravel/framework": "^8.0|^9.0"
+        "php": ">=7.4",
+        "laravel/framework": "^8.0|^9.0",
+        "friendsofphp/php-cs-fixer": "^3.13"
     },
     "autoload": {
         "psr-0": {
             "YAAP\\Theme": "src/"
         }
+    },
+    "scripts": {
+        "style:fix": "vendor/bin/php-cs-fixer fix --config php-cs-fixer.dist.php"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -35,5 +39,4 @@
             }
         }
     }
-
 }
