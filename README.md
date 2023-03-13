@@ -238,9 +238,9 @@ We will be happy to work with you! Other [work we’ve done](https://hexide-digi
 
 ## Follow us
 
-Stay up to date with the latest Vuestic news! Follow us on [LinkedIn](https://www.linkedin.com/company/hexide-digital)
+Stay up to date with the latest news! Follow us on [LinkedIn](https://www.linkedin.com/company/hexide-digital)
 or [Facebook](https://www.facebook.com/hexide.digital)
 
 # License
 
-[MIT](https://github.com/epicmaxco/vuestic-admin/blob/master/LICENSE) license.
+[MIT](https://github.com/yaapis/Theme/blob/master/LICENSE) license.
