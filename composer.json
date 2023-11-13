@@ -1,6 +1,6 @@
 {
     "name": "yaap/theme",
-    "description": "Theme support for Laravel 8/9 with assets, theme extends etc.",
+    "description": "Theme support for Laravel with assets, theme extends etc.",
     "license": "MIT",
     "keywords": [
         "laravel",
@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "laravel/framework": "^8 || ^9"
+        "laravel/framework": "^8 || ^9 || ^10"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.38"
