@@ -66,25 +66,25 @@ class ThemeGeneratorCommand extends BaseThemeCommand
     protected function generateThemeStructure(): void
     {
         // Generate inside config.
-        $this->makeFile('config.php', $this->fromTemplate('config.php'));
+        $this->makeFile('config.php', $this->fromTemplate('config/config.php'));
 
         $this->makeFile(
             $this->containerFolder['layout'] . '/master.blade.php',
-            $this->fromTemplate('layout.blade.php')
+            $this->fromTemplate('views/layouts/layout.blade.php')
         );
 
         $this->makeFile(
             $this->containerFolder['partial'] . '/header.blade.php',
-            $this->fromTemplate('header.blade.php')
+            $this->fromTemplate('views/partials/header.blade.php')
         );
         $this->makeFile(
             $this->containerFolder['partial'] . '/footer.blade.php',
-            $this->fromTemplate('footer.blade.php')
+            $this->fromTemplate('views/partials/footer.blade.php')
         );
 
-        $this->makeFile($this->containerFolder['view'] . '/hello.blade.php', $this->fromTemplate('view.blade.php'));
+        $this->makeFile($this->containerFolder['view'] . '/hello.blade.php', $this->fromTemplate('views/view.blade.php'));
 
-        $this->makeFile($this->containerFolder['lang'] . '/en/labels.php', $this->fromTemplate('lang.php'));
+        $this->makeFile($this->containerFolder['lang'] . '/en/labels.php', $this->fromTemplate('lang/lang.php'));
     }
 
     protected function generateAssets(): void
@@ -92,9 +92,9 @@ class ThemeGeneratorCommand extends BaseThemeCommand
         // frontend sources
         $assets = $this->containerFolder['assets'];
 
-        $this->makeFile("{$assets}/sass/_variables.scss", $this->fromTemplate('_variables.scss'));
-        $this->makeFile("{$assets}/sass/app.scss", $this->fromTemplate('app.scss'));
-        $this->makeFile("{$assets}/js/app.js", $this->fromTemplate('app.js.stub'));
+        $this->makeFile("{$assets}/sass/_variables.scss", $this->fromTemplate('scss/_variables.scss'));
+        $this->makeFile("{$assets}/sass/app.scss", $this->fromTemplate('scss/app.scss'));
+        $this->makeFile("{$assets}/js/app.js", $this->fromTemplate('js/app.js'));
         $this->makeFile("{$assets}/img/favicon.png", $this->fromTemplate('favicon.png'));
         $this->makeFile("{$assets}/fonts/.gitkeep");
     }
@@ -171,7 +171,7 @@ class ThemeGeneratorCommand extends BaseThemeCommand
 
     protected function getTemplatePath(string $templateName): string
     {
-        $templatesPath = realpath(__DIR__ . '/../templates');
+        $templatesPath = realpath(__DIR__ . '/../../stubs');
 
         return "{$templatesPath}/{$templateName}";
     }

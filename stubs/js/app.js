@@ -1,7 +1,7 @@
-class %theme_name% {
+class SampleClass {
     constructor() {
         console.log('%theme_name% constructor');
     }
 }
 
-new %theme_name%();
+new SampleClass();

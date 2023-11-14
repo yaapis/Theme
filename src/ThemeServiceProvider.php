@@ -2,6 +2,8 @@
 
 namespace YAAP\Theme;
 
+use Illuminate\Console\Application;
+use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -25,7 +27,7 @@ class ThemeServiceProvider extends ServiceProvider
     public function register(): void
     {
         // init theme with default finder
-        $this->app->singleton('theme-loader', function ($app) {
+        $this->app->singleton('theme-loader', function (Container $app) {
             return new ThemeLoader(
                 $app,
                 $this->app['view']->getFinder(),
@@ -35,12 +37,12 @@ class ThemeServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             'theme.create',
-            fn ($app) => new Commands\ThemeGeneratorCommand($app['config'], $app['files'])
+            fn (Container $app) => new Commands\ThemeGeneratorCommand($app['config'], $app['files'])
         );
 
         $this->app->singleton(
             'theme.destroy',
-            fn ($app) => new Commands\ThemeDestroyCommand($app['config'], $app['files'])
+            fn (Container $app) => new Commands\ThemeDestroyCommand($app['config'], $app['files'])
         );
 
         $this->commands([
@@ -58,7 +60,7 @@ class ThemeServiceProvider extends ServiceProvider
 
     protected function loadConfig(): void
     {
-        $this->mergeConfigFrom($this->pathToConfig('config/config.php'), 'theme');
+        $this->mergeConfigFrom($this->pathToConfig('config/theme.php'), 'theme');
     }
 
     /**
@@ -68,6 +70,6 @@ class ThemeServiceProvider extends ServiceProvider
      */
     protected function pathToConfig(string $path): string
     {
-        return __DIR__ . '/../../' . $path;
+        return __DIR__ . '/../' . $path;
     }
 }
