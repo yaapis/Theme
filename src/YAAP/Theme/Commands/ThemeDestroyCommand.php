@@ -2,15 +2,12 @@
 
 namespace YAAP\Theme\Commands;
 
-use Illuminate\Config\Repository;
-use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem as File;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Class ThemeDestroyCommand.
  */
-class ThemeDestroyCommand extends Command
+class ThemeDestroyCommand extends BaseThemeCommand
 {
     /**
      * The console command name.
@@ -24,113 +21,39 @@ class ThemeDestroyCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Remove exsisting theme';
-
-    /**
-     * Repository config.
-     *
-     * @var Repository
-     */
-    protected $config;
-
-    /**
-     * Filesystem.
-     *
-     * @var File
-     */
-    protected $files;
-
-    /**
-     * Create a new command instance.
-     */
-    public function __construct(Repository $config, File $files)
-    {
-        $this->config = $config;
-
-        $this->files = $files;
-
-        parent::__construct();
-    }
+    protected $description = 'Remove existing theme';
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): int
     {
         // The theme is not exists.
-        if (!$this->files->isDirectory($this->getPath(null))) {
-            $this->error('Theme "' . $this->getTheme() . '" is not exists.');
+        $directoryDoesNotExists = !$this->directoryExists();
+        if ($directoryDoesNotExists) {
+            $this->error('Theme "' . $this->getTheme()->getName() . '" does not exist.');
 
-            return;
+            return self::FAILURE;
         }
 
-        $themePath = $this->getPath(null);
-
-        $assetsPath = $this->getAssetsPath(null);
-
-        if ($this->confirm('Are you sure you want to permanently delete? [yes|no]')) {
+        if ($this->confirm('Are you sure you want to permanently delete?')) {
             // Delete permanent.
-            $this->files->deleteDirectory($themePath, false);
-            $this->files->deleteDirectory($assetsPath, false);
+            $this->files->deleteDirectory($this->getTheme()->getRootDirectoryPath(), false);
+            $this->files->deleteDirectory($this->getAssetsPath(), false);
 
-            $this->info('Theme "' . $this->getTheme() . '" has been destroyed.');
-        }
-    }
-
-    /**
-     * Get root writable path.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    protected function getPath($path)
-    {
-        $rootPath = $this->config->get('theme::path', base_path('themes'));
-
-        return $rootPath . '/' . strtolower($this->getTheme()) . '/' . $path;
-    }
-
-    /**
-     * Get assets writable path.
-     *
-     * @param string $path
-     * @param bool   $absolute
-     *
-     * @return string
-     */
-    protected function getAssetsPath($path, $absolute = true)
-    {
-        $rootPath = $this->config->get('theme::assets_path', 'themes');
-
-        if ($absolute) {
-            $rootPath = public_path($rootPath);
+            $this->info('Theme "' . $this->getTheme()->getName() . '" has been destroyed.');
         }
 
-        return $rootPath . '/' . strtolower($this->getTheme()) . '/' . $path;
-    }
-
-    /**
-     * Get the theme name.
-     *
-     * @return string
-     */
-    protected function getTheme()
-    {
-        return strtolower($this->argument('name'));
+        return self::SUCCESS;
     }
 
     /**
      * Get the console command arguments.
-     *
-     * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'Name of the theme to generate.'],
+            new InputArgument('name', InputArgument::REQUIRED, 'Name of the theme to generate.'),
         ];
     }
 }

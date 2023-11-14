@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace YAAP\Theme;
 
 use Illuminate\Support\ServiceProvider;
@@ -12,18 +10,13 @@ use Illuminate\Support\ServiceProvider;
 class ThemeServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     */
-    protected bool $defer = false;
-
-    /**
      * Bootstrap the application events.
      */
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__ . '/../../config/config.php' => config_path('theme.php'),
-        ], 'config');
+        $this->loadPublishes();
+
+        $this->loadConfig();
     }
 
     /**
@@ -32,28 +25,49 @@ class ThemeServiceProvider extends ServiceProvider
     public function register(): void
     {
         // init theme with default finder
-        $this->app->singleton('theme', fn ($app) => new Theme($app, $this->app['view']->getFinder(), $this->app['translator']->getLoader()));
+        $this->app->singleton('theme-loader', function ($app) {
+            return new ThemeLoader(
+                $app,
+                $this->app['view']->getFinder(),
+                $this->app['translator']->getLoader()
+            );
+        });
 
-        // merge & publish config
-        $configPath = __DIR__ . '/../../config/config.php';
-        $this->mergeConfigFrom($configPath, 'theme');
-        $this->publishes([$configPath => config_path('theme.php')]);
-
-        $this->app->singleton('theme.create', fn ($app) => new Commands\ThemeGeneratorCommand($app['config'], $app['files']));
-
-        $this->app->singleton('theme.destroy', fn ($app) => new Commands\ThemeDestroyCommand($app['config'], $app['files']));
-
-        $this->commands(
+        $this->app->singleton(
             'theme.create',
-            'theme.destroy'
+            fn ($app) => new Commands\ThemeGeneratorCommand($app['config'], $app['files'])
         );
+
+        $this->app->singleton(
+            'theme.destroy',
+            fn ($app) => new Commands\ThemeDestroyCommand($app['config'], $app['files'])
+        );
+
+        $this->commands([
+            'theme.create',
+            'theme.destroy',
+        ]);
+    }
+
+    protected function loadPublishes(): void
+    {
+        $this->publishes([
+            $this->pathToConfig('config/theme.php') => config_path('theme.php'),
+        ], 'configs');
+    }
+
+    protected function loadConfig(): void
+    {
+        $this->mergeConfigFrom($this->pathToConfig('config/config.php'), 'theme');
     }
 
     /**
-     * Get the services provided by the provider.
+     * Get the absolute path to some package resource.
+     *
+     * @param string $path The relative path to the resource
      */
-    public function provides(): array
+    protected function pathToConfig(string $path): string
     {
-        return [];
+        return __DIR__ . '/../../' . $path;
     }
 }

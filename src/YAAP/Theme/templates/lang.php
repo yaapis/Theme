@@ -1,11 +1,13 @@
 <?php
 
-return [
-    /*
-    |--------------------------------------------------------------------------
-    | Theme language variables
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| Theme language variables for %theme_name%
+|--------------------------------------------------------------------------
+|
+| Usage - @lang('%theme_name%::labels.intro') or __('%theme_name%::labels.intro')
+*/
 
-    'intro' => 'This is a default lable',
+return [
+    'intro' => 'This is a default label',
 ];

@@ -1,27 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
 namespace YAAP\Theme\Commands;
 
-use Illuminate\Config\Repository;
-use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem as File;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ThemeGeneratorCommand.
  */
-class ThemeGeneratorCommand extends Command
+class ThemeGeneratorCommand extends BaseThemeCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $signature = 'theme:create
-                            {name : A name of the new theme}
-                            {--with-mix : Seed webpack.mix.js with themes specific}';
+    protected $name = 'theme:create';
 
     /**
      * The console command description.
@@ -30,218 +24,173 @@ class ThemeGeneratorCommand extends Command
      */
     protected $description = 'Generate theme structure';
 
-    /**
-     * Repository config.
-     *
-     * @var Repository
-     */
-    protected $config;
-
-    /**
-     * Filesystem.
-     *
-     * @var File
-     */
-    protected $files;
-
-    /**
-     * Create a new command instance.
-     */
-    public function __construct(Repository $config, File $files)
-    {
-        $this->config = $config;
-
-        $this->files = $files;
-
-        parent::__construct();
-    }
+    protected array $containerFolder;
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): int
     {
-        // The theme is already exists.
-        if ($this->files->isDirectory($this->getPath(null))) {
-            return $this->error('Theme "' . $this->getTheme() . '" is already exists.');
+        // Check if the theme is already exists.
+        if (!$this->canGenerateTheme()) {
+            return self::FAILURE;
         }
 
         // Directories.
-        $container = $this->config->get('theme.containerDir');
+        $this->containerFolder = $this->config->get('theme.containerDir');
 
-        $this->makeDir($this->getPath($container['layout']));
-        $this->makeDir($this->getPath($container['partial']));
-        $this->makeDir($this->getPath($container['view']));
-
-        $this->makeFile($container['layout'] . '/master.blade.php', $this->getTemplate('layout.blade.php'));
-        $this->makeFile($container['partial'] . '/header.blade.php', $this->getTemplate('header.blade.php'));
-        $this->makeFile($container['partial'] . '/footer.blade.php', $this->getTemplate('footer.blade.php'));
-        $this->makeFile($container['view'] . '/hello.blade.php', $this->getTemplate('view.blade.php'));
-
-        // lang
-        $this->makeDir($this->getPath($container['lang']));
-        $this->makeDir($this->getPath($container['lang'] . '/en'));
-        $this->makeFile($container['lang'] . '/en/labels.php', $this->getTemplate('lang.php'));
-
-        // frontend sources
-        $this->makeDir($this->getPath($container['assets']));
-        // sass
-        $this->makeDir($this->getPath($container['assets'] . '/sass'));
-        $this->makeFile($container['assets'] . '/sass/_variables.scss', $this->getTemplate('_variables.scss'));
-        $this->makeFile($container['assets'] . '/sass/app.scss', $this->getTemplate('app.scss'));
-
-        // js
-        $this->makeDir($this->getPath($container['assets'] . '/js'));
-        $this->makeFile($container['assets'] . '/js/app.js', $this->getTemplate('app.js'));
-
-        // img
-        $this->makeDir($this->getPath($container['assets'] . '/img'));
-        $this->makeFile($container['assets'] . '/img/favicon.png', $this->getTemplate('favicon.png'));
-
-        // fonts
-        $this->makeDir($this->getPath($container['assets'] . '/fonts'));
-
-        // public assets
-        $this->makeDir($this->getAssetsPath('css'));
-        $this->makeAssetsFile('css/.gitkeep', '');
-
-        $this->makeDir($this->getAssetsPath('js'));
-        $this->makeAssetsFile('js/.gitkeep', '');
-
-        $this->makeDir($this->getAssetsPath('img'));
-        $this->makeAssetsFile('img/.gitkeep', '');
-
-        $this->makeDir($this->getAssetsPath('fonts'));
-        $this->makeAssetsFile('fonts/.gitkeep', '');
-
-        // Generate inside config.
-        $this->makeFile('config.php', $this->getTemplate('config.php', ['%theme_name%' => $this->getTheme()]));
+        $this->generateThemeStructure();
+        $this->generateAssets();
+        $this->generatePublicFolders();
 
         // mix
-        $withMix = $this->option('with-mix');
-        if ($withMix) {
+        if ($this->option('with-mix')) {
             $this->info('Seeding webpack.mix.js');
-            $this->files->append(
-                base_path('webpack.mix.js'),
-                $this->getTemplate('mix.js', ['%theme_name%' => $this->getTheme()])
-            );
+            $this->files->append(base_path('webpack.mix.js'), $this->fromTemplate('mix.js'));
         }
 
-        $this->info('Theme "' . $this->getTheme() . '" has been created.');
+        $this->info('Theme "' . $this->getTheme()->getName() . '" has been created.');
+
+        return self::SUCCESS;
+    }
+
+    protected function generatePublicFolders(): void
+    {
+        // public assets
+        $this->makeAssetsFile('css/.gitkeep');
+        $this->makeAssetsFile('js/.gitkeep');
+        $this->makeAssetsFile('img/.gitkeep');
+        $this->makeAssetsFile('fonts/.gitkeep');
+    }
+
+    protected function generateThemeStructure(): void
+    {
+        // Generate inside config.
+        $this->makeFile('config.php', $this->fromTemplate('config.php'));
+
+        $this->makeFile(
+            $this->containerFolder['layout'] . '/master.blade.php',
+            $this->fromTemplate('layout.blade.php')
+        );
+
+        $this->makeFile(
+            $this->containerFolder['partial'] . '/header.blade.php',
+            $this->fromTemplate('header.blade.php')
+        );
+        $this->makeFile(
+            $this->containerFolder['partial'] . '/footer.blade.php',
+            $this->fromTemplate('footer.blade.php')
+        );
+
+        $this->makeFile($this->containerFolder['view'] . '/hello.blade.php', $this->fromTemplate('view.blade.php'));
+
+        $this->makeFile($this->containerFolder['lang'] . '/en/labels.php', $this->fromTemplate('lang.php'));
+    }
+
+    protected function generateAssets(): void
+    {
+        // frontend sources
+        $assets = $this->containerFolder['assets'];
+
+        $this->makeFile("{$assets}/sass/_variables.scss", $this->fromTemplate('_variables.scss'));
+        $this->makeFile("{$assets}/sass/app.scss", $this->fromTemplate('app.scss'));
+        $this->makeFile("{$assets}/js/app.js", $this->fromTemplate('app.js.stub'));
+        $this->makeFile("{$assets}/img/favicon.png", $this->fromTemplate('favicon.png'));
+        $this->makeFile("{$assets}/fonts/.gitkeep");
+    }
+
+    protected function canGenerateTheme(): bool
+    {
+        $themeInfo = $this->getTheme();
+
+        $directoryExists = $this->directoryExists();
+        if ($directoryExists) {
+            $this->error('Theme "' . $themeInfo->getName() . '" is already exists.');
+        }
+
+        if ($this->option('force')) {
+            return $this->confirm('Are you sure want to override existing theme folder?');
+        }
+
+        return !$directoryExists;
     }
 
     /**
      * Make directory.
      */
-    protected function makeDir($path): void
+    protected function makeDir(string $path): void
     {
         if (!$this->files->isDirectory($path)) {
-            $this->files->makeDirectory($path, 0777, true);
+            $this->files->makeDirectory($path, 0755, true);
         }
     }
 
     /**
      * Make file.
-     *
-     * @param string $file
-     * @param string $template
-     * @param bool   $assets
      */
-    protected function makeFile($file, $template = null, $assets = false): void
+    protected function makeFile(string $file, string $content = '', bool $assets = false): void
     {
-        if (!$this->files->exists($this->getPath($file))) {
-            $content = $assets ? $this->getAssetsPath($file, true) : $this->getPath($file);
+        $filePath = $assets
+            ? $this->getAssetsPath($file)
+            : $this->getTheme()->pathForItem($file);
 
-            $this->files->put($content, $template);
+        if (!$this->files->exists($filePath) || $this->option('force')) {
+            $this->makeDir(pathinfo($filePath, PATHINFO_DIRNAME));
+
+            $this->files->put($filePath, $content);
         }
     }
 
     /**
      * Make file.
-     *
-     * @param string $file
-     * @param string $template
      */
-    protected function makeAssetsFile($file, $template = null): void
+    protected function makeAssetsFile(string $file, string $template = ''): void
     {
         $this->makeFile($file, $template, true);
     }
 
     /**
-     * Get root writable path.
-     *
-     * @param string $path
-     *
-     * @return string
+     * Get template content.
      */
-    protected function getPath($path)
+    protected function fromTemplate(string $templateName, array $replacements = []): string
     {
-        $rootPath = $this->config->get('theme.path', base_path('themes'));
+        $templatePath = $this->getTemplatePath($templateName);
 
-        return $rootPath . '/' . strtolower($this->getTheme()) . '/' . $path;
+        $replacements = array_merge($replacements, [
+            '%theme_name%' => $this->getTheme()->getName(),
+        ]);
+
+        $content = $this->files->get($templatePath);
+
+        return str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $content
+        );
     }
 
-    /**
-     * Get assets writable path.
-     *
-     * @param string $path
-     * @param bool   $absolute
-     *
-     * @return string
-     */
-    protected function getAssetsPath($path, $absolute = true)
+    protected function getTemplatePath(string $templateName): string
     {
-        $rootPath = $this->config->get('theme.assets_path', 'themes');
+        $templatesPath = realpath(__DIR__ . '/../templates');
 
-        if ($absolute) {
-            $rootPath = public_path($rootPath);
-        }
-
-        return $rootPath . '/' . strtolower($this->getTheme()) . '/' . $path;
-    }
-
-    /**
-     * Get the theme name.
-     *
-     * @return string
-     */
-    protected function getTheme()
-    {
-        return strtolower($this->argument('name'));
-    }
-
-    /**
-     * Get default template.
-     *
-     * @param string $template
-     * @param array  $replacements
-     *
-     * @return string
-     */
-    protected function getTemplate($template, $replacements = [])
-    {
-        $path = realpath(__DIR__ . '/../templates/' . $template);
-
-        $content = $this->files->get($path);
-
-        if (!empty($replacements)) {
-            $content = str_replace(array_keys($replacements), array_values($replacements), $content);
-        }
-
-        return $content;
+        return "{$templatesPath}/{$templateName}";
     }
 
     /**
      * Get the console command arguments.
-     *
-     * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'Name of the theme to generate.'],
+            new InputArgument('name', InputArgument::REQUIRED, 'A name of the new theme.'),
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            new InputOption('with-mix', null, InputOption::VALUE_NONE, 'Seed webpack.mix.js with themes specific'),
+            new InputOption('force', null, InputOption::VALUE_NONE, 'Force create theme with same name'),
         ];
     }
 }

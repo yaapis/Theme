@@ -2,8 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <title>default theme</title>
-    <link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
+    <title>%theme_name% theme</title>
+    <link rel="stylesheet" href="{{ mix('/themes/%theme_name%/css/app.min.css') }}"/>
 </head>
 
 <body>
@@ -14,8 +14,7 @@
 
 <div>@include('partials.footer')</div>
 
-<script type="text/javascript" src="{{ mix('/themes/default/js/app.min.js') }}"></script>
+<script type="text/javascript" src="{{ mix('/themes/%theme_name%/js/app.min.js') }}"></script>
 
 </body>
-
 </html>
