@@ -37,7 +37,14 @@ class ThemeGeneratorCommand extends BaseThemeCommand
         }
 
         // Directories.
-        $this->containerFolder = $this->config->get('theme.containerDir');
+        $dirMapping = $this->config->get('theme.containerDir');
+        $this->containerFolder = [
+            'assets' => $dirMapping['assets'] ?? 'assets',
+            'lang' => $dirMapping['lang'] ?? 'lang',
+            'layout' => $dirMapping['layout'] ?? 'views/layouts',
+            'partial' => $dirMapping['partial'] ?? 'views/partials',
+            'view' => $dirMapping['view'] ?? 'views',
+        ];
 
         $this->generateThemeStructure();
         $this->generateAssets();
@@ -82,9 +89,15 @@ class ThemeGeneratorCommand extends BaseThemeCommand
             $this->fromTemplate('views/partials/footer.blade.php')
         );
 
-        $this->makeFile($this->containerFolder['view'] . '/hello.blade.php', $this->fromTemplate('views/view.blade.php'));
+        $this->makeFile(
+            $this->containerFolder['view'] . '/hello.blade.php',
+            $this->fromTemplate('views/view.blade.php')
+        );
 
-        $this->makeFile($this->containerFolder['lang'] . '/en/labels.php', $this->fromTemplate('lang/lang.php'));
+        $this->makeFile(
+            $this->containerFolder['lang'] . '/en/labels.php',
+            $this->fromTemplate('lang/lang.php')
+        );
     }
 
     protected function generateAssets(): void

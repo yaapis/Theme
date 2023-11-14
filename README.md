@@ -167,9 +167,9 @@ project-root
 |   ├── default/
 |   |   ├── assets/        
 |   |   ├── lang/        
-|   |   ├── layouts/
-|   |   ├── partials/
 |   |   ├── views/
+|   |   |   ├── layouts/
+|   |   |   ├── partials/
 |   |   |   └── hello.blade.php
 |   |   └── config.php
 |   ├── admin/
@@ -187,7 +187,6 @@ project-root
 
 This will add to views find path:
 
-* themes/{$name}
 * themes/{$name}/views
 
 Lang files will be added as well:
