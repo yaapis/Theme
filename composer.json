@@ -1,13 +1,13 @@
 {
     "name": "yaap/theme",
-    "description": "Theme support for Laravel 8/9 with assets, theme extends etc.",
+    "description": "Theme support for Laravel with assets, theme extends etc.",
+    "license": "MIT",
     "keywords": [
         "laravel",
         "theme",
         "layout",
         "asset"
     ],
-    "license": "MIT",
     "authors": [
         {
             "name": "Biluk Andrey",
@@ -16,27 +16,29 @@
     ],
     "require": {
         "php": ">=7.4",
-        "laravel/framework": "^8.0|^9.0",
-        "friendsofphp/php-cs-fixer": "^3.13"
+        "laravel/framework": "^8 || ^9 || ^10"
     },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.38"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-0": {
             "YAAP\\Theme": "src/"
         }
     },
-    "scripts": {
-        "style:fix": "vendor/bin/php-cs-fixer fix --config php-cs-fixer.dist.php"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "laravel": {
-            "providers": [
-                "YAAP\\Theme\\ThemeServiceProvider"
-            ],
             "aliases": {
                 "Theme": "YAAP\\Theme\\Facades\\Theme"
-            }
+            },
+            "providers": [
+                "YAAP\\Theme\\ThemeServiceProvider"
+            ]
         }
+    },
+    "scripts": {
+        "style:fix": "vendor/bin/php-cs-fixer fix --config php-cs-fixer.dist.php"
     }
 }

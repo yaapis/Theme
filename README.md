@@ -3,18 +3,24 @@
 Inspired by [bigecko/laravel-theme](https://github.com/harryxu/laravel-theme).
 Themes are stored inside default laravel's resources folder
 
-# Requirements
+## Requirements
 
-This package requires **PHP 7.3** or event 8.* and **Laravel** 8 or 9.
+This version requires [PHP](https://www.php.net/) 7.4-8.1 and supports [Laravel](https://laravel.com/) 8-10.
 
-Currently, supported only for webpack with `laravel-mix`.
+> Currently, supported only for webpack with `laravel-mix`.
 
-# Installation
+| Themes | L5.5               | L5.6               | L5.7               | L5.8               | L6                 | L7  | L8                 | L9                 | L10                |
+|--------|--------------------|--------------------|--------------------|--------------------|--------------------|-----|--------------------|--------------------|--------------------|
+| 2.4    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x: | :x:                | :x:                | :x:                |
+| 3.0    | :x:                | :x:                | :x:                | :x:                | :white_check_mark: | :x: | :x:                | :x:                | :x:                |
+| 4.2    | :x:                | :x:                | :x:                | :x:                | :x:                | :x: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
-You can install this package via composer using:
+## Installation
+
+To get the latest version, simply require the project using [Composer](https://getcomposer.org/):
 
 ```bash
-composer require yaap/theme
+composer require "yaap/theme:^4.0"
 ```
 
 or manually add line to `composer.json`
@@ -33,9 +39,9 @@ Optionally, publish config using artisan CLI (if you want to overwrite default c
 php artisan vendor:publish --provider="YAAP\Theme\ThemeServiceProvider"
 ```
 
-# Configuration
+## Configuration
 
-## Package config
+### Package config
 
 ```php
 return [
@@ -82,7 +88,7 @@ return [
 ];
 ```
 
-## Theme config
+### Theme config
 
 Config in theme folder
 
@@ -114,9 +120,9 @@ return [
 ];
 ```
 
-# Usage
+## Usage
 
-## Create theme with artisan CLI
+### Create theme with artisan CLI
 
 The first time you have to create theme `default` structure, using the artisan command:
 
@@ -136,7 +142,7 @@ To delete an existing theme, use the command:
 php artisan theme:destroy default
 ```
 
-## Structure
+### Structure
 
 Here is an example of the folder structure of project with theme
 
@@ -172,7 +178,7 @@ project-root
 |       └── hello.blade.php
 ```
 
-# Init theme
+## Init theme
 
 ```php
 Theme::init($name)
@@ -187,20 +193,21 @@ Lang files will be added as well:
 
 * themes/{$name}/lang
 
-## Making view
+### Making view
 
 ```php
 View::make('hello');
 View::make('emails.notify');
 ```
 
-## Assets
+### Assets
 
-Use laravel mix for assets. 
+Use laravel mix for assets.
 
 In header
 
 ```html
+
 <link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
 ```
 
@@ -210,7 +217,7 @@ and in footer
 <script type="text/javascript" src="{{ mix('/themes/default/js/app.min.js') }}"></script>
 ```
 
-## Blade templates
+### Blade templates
 
 ```
 @extends('layouts.master')
@@ -226,21 +233,21 @@ and in footer
 @include('partials.footer')
 ```
 
-## Fallback capability
+### Fallback capability
 
 You still able to use default `View::make('emails.notify')` which is stored outside the themes directory.
 
-# Can I hire you guys?
+## Can I hire you guys?
 
 Yes! Say hi: [hello@hexide-digital.com](mailto:hello@hexide-digital.com)
 
 We will be happy to work with you! Other [work we’ve done](https://hexide-digital.com/)
 
-## Follow us
+### Follow us
 
 Stay up to date with the latest news! Follow us on [LinkedIn](https://www.linkedin.com/company/hexide-digital)
 or [Facebook](https://www.facebook.com/hexide.digital)
 
-# License
+## License
 
 [MIT](https://github.com/yaapis/Theme/blob/master/LICENSE) license.
