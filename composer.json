@@ -24,8 +24,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "psr-0": {
-            "YAAP\\Theme": "src/"
+        "psr-4": {
+            "YAAP\\Theme\\": "src/"
         }
     },
     "extra": {
