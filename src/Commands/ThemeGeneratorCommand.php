@@ -114,18 +114,25 @@ class ThemeGeneratorCommand extends BaseThemeCommand
 
     protected function canGenerateTheme(): bool
     {
-        $themeInfo = $this->getTheme();
-
         $directoryExists = $this->directoryExists();
-        if ($directoryExists) {
-            $this->error('Theme "' . $themeInfo->getName() . '" is already exists.');
+        if (!$directoryExists) {
+            return true;
         }
 
-        if ($this->option('force')) {
-            return $this->confirm('Are you sure want to override existing theme folder?');
+        $name = $this->getTheme()->getName();
+
+        $this->error("Theme \"{$name}\" already exists.");
+
+        $forceOverride = $this->option('force')
+            || $this->confirm("Are you sure want to override \"{$name}\" theme folder?");
+
+        if ($forceOverride) {
+            $this->warn("Overriding Theme \"{$name}\".");
+        } else {
+            $this->error("Generation of Theme \"{$name}\" has been canceled.");
         }
 
-        return !$directoryExists;
+        return $forceOverride;
     }
 
     /**
