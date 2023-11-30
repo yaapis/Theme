@@ -57,16 +57,18 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
         ];
 
         $this->generateThemeStructure();
-        $this->generateAssets();
-        $this->generatePublicFolders();
+        if ($this->isVite()) {
+            $this->generateViteAssets();
 
-        // mix
-        if ($this->option('with-mix')) {
+            $this->info('Append next lint to vite.config.js');
+            $this->info($this->fromTemplate('vite/vite.config.stub'));
+        } else {
+            $this->generatePublicFolders();
+            $this->generateMixAssets();
+
             $this->info('Seeding webpack.mix.js');
-            $this->files->append(base_path('webpack.mix.js'), $this->fromTemplate('mix.js'));
+            $this->files->append(base_path('webpack.mix.js'), $this->fromTemplate('laravel-mix/mix.stub'));
         }
-
-        $this->info('Theme "' . $this->getTheme()->getName() . '" has been created.');
 
         return self::SUCCESS;
     }
@@ -76,50 +78,85 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
         // public assets
         $this->makeAssetsFile('css/.gitkeep');
         $this->makeAssetsFile('js/.gitkeep');
-        $this->makeAssetsFile('img/.gitkeep');
         $this->makeAssetsFile('fonts/.gitkeep');
     }
 
     protected function generateThemeStructure(): void
     {
         // Generate inside config.
-        $this->makeFile('config.php', $this->fromTemplate('config/config.php'));
+        $this->makeFile('config.php', $this->fromTemplate('common/config/config.php'));
 
         $this->makeFile(
-            $this->containerFolder['layout'] . '/master.blade.php',
-            $this->fromTemplate('views/layouts/layout.blade.php')
+            $this->containerFolder['lang'] . '/en/labels.php',
+            $this->fromTemplate('common/lang/labels.php')
         );
 
         $this->makeFile(
             $this->containerFolder['partial'] . '/header.blade.php',
-            $this->fromTemplate('views/partials/header.blade.php')
+            $this->fromTemplate('common/views/partials/header.blade.php')
         );
         $this->makeFile(
             $this->containerFolder['partial'] . '/footer.blade.php',
-            $this->fromTemplate('views/partials/footer.blade.php')
+            $this->fromTemplate('common/views/partials/footer.blade.php')
         );
 
-        $this->makeFile(
-            $this->containerFolder['view'] . '/hello.blade.php',
-            $this->fromTemplate('views/view.blade.php')
-        );
 
-        $this->makeFile(
-            $this->containerFolder['lang'] . '/en/labels.php',
-            $this->fromTemplate('lang/lang.php')
-        );
+        if ($this->isVite()) {
+            $this->makeFile(
+                $this->containerFolder['layout'] . '/master.blade.php',
+                $this->fromTemplate('vite/views/layouts/master.blade.php')
+            );
+            $this->makeFile(
+                $this->containerFolder['layout'] . '/master.blade.php',
+                $this->fromTemplate('vite/views/layouts/master.blade.php')
+            );
+            $this->writeContent(
+                app_path('View/Components/AppLayout.php'),
+                $this->fromTemplate('vite/app/AppLayout.stub')
+            );
+        } else {
+            $this->makeFile(
+                $this->containerFolder['layout'] . '/master.blade.php',
+                $this->fromTemplate('laravel-mix/views/layouts/master.blade.php')
+            );
+            $this->makeFile(
+                $this->containerFolder['view'] . '/hello.blade.php',
+                $this->fromTemplate('laravel-mix/views/hello.blade.php')
+            );
+        }
     }
 
-    protected function generateAssets(): void
+    protected function generateMixAssets(): void
     {
         // frontend sources
         $assets = $this->containerFolder['assets'];
 
-        $this->makeFile("{$assets}/sass/_variables.scss", $this->fromTemplate('scss/_variables.scss'));
-        $this->makeFile("{$assets}/sass/app.scss", $this->fromTemplate('scss/app.scss'));
-        $this->makeFile("{$assets}/js/app.js", $this->fromTemplate('js/app.js'));
-        $this->makeFile("{$assets}/img/favicon.png", $this->fromTemplate('favicon.png'));
+        $this->makeFile("{$assets}/img/favicon.png", $this->fromTemplate('common/favicon.png'));
+        $this->makeFile("{$assets}/sass/_variables.scss", $this->fromTemplate('common/scss/_variables.scss'));
+        $this->makeFile("{$assets}/sass/app.scss", $this->fromTemplate('common/scss/app.scss'));
         $this->makeFile("{$assets}/fonts/.gitkeep");
+
+        $this->makeFile("{$assets}/js/app.js", $this->fromTemplate('laravel-mix/js/app.js'));
+    }
+
+    public function isVite(): bool
+    {
+        return $this->argument('assets') === 'vite';
+    }
+
+    protected function generateViteAssets(): void
+    {
+        // frontend sources
+        $assets = $this->containerFolder['assets'];
+
+        $this->makeFile("{$assets}/img/favicon.png", $this->fromTemplate('common/favicon.png'));
+
+        $this->makeFile("{$assets}/sass/_variables.scss", $this->fromTemplate('common/scss/_variables.scss'));
+        $this->makeFile("{$assets}/sass/app.scss", $this->fromTemplate('common/scss/app.scss'));
+        $this->makeFile("{$assets}/fonts/.gitkeep");
+
+        $this->makeFile("{$assets}/js/app.js", $this->fromTemplate('vite/js/app.js'));
+        $this->makeFile("{$assets}/js/bootstrap.js", $this->fromTemplate('vite/js/bootstrap.js'));
     }
 
     protected function canGenerateTheme(): bool
@@ -158,17 +195,9 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
     /**
      * Make file.
      */
-    protected function makeFile(string $file, string $content = '', bool $assets = false): void
+    protected function makeFile(string $file, string $content = ''): void
     {
-        $filePath = $assets
-            ? $this->getAssetsPath($file)
-            : $this->getTheme()->pathForItem($file);
-
-        if (!$this->files->exists($filePath) || $this->option('force')) {
-            $this->makeDir(pathinfo($filePath, PATHINFO_DIRNAME));
-
-            $this->files->put($filePath, $content);
-        }
+        $this->writeContent($this->getTheme()->pathForItem($file), $content);
     }
 
     /**
@@ -176,7 +205,16 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
      */
     protected function makeAssetsFile(string $file, string $template = ''): void
     {
-        $this->makeFile($file, $template, true);
+        $this->writeContent($this->getAssetsPath($file), $template);
+    }
+
+    protected function writeContent(string $filePath, string $content): void
+    {
+        if (!$this->files->exists($filePath) || $this->option('force')) {
+            $this->makeDir(pathinfo($filePath, PATHINFO_DIRNAME));
+
+            $this->files->put($filePath, $content);
+        }
     }
 
     /**
@@ -206,12 +244,12 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
         return "{$templatesPath}/{$templateName}";
     }
 
-    private function validateValue($value): string
+    private function validateValue($value): ?string
     {
         return match (true) {
             empty($value) => 'Name is required.',
 
-            filled(
+            !empty(
                 preg_match(
                     '/[^a-zA-Z0-9\-_\s]/',
                     $value,
@@ -233,6 +271,8 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
     {
         return [
             new InputArgument('name', InputArgument::REQUIRED, 'A name of the new theme'),
+            new InputArgument('assets', InputArgument::OPTIONAL, 'A type of assets to install', 'vite', ['vite', 'mix']
+            ),
         ];
     }
 
@@ -250,7 +290,6 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
     protected function getOptions(): array
     {
         return [
-            new InputOption('with-mix', null, InputOption::VALUE_NONE, 'Seed webpack.mix.js with themes specific'),
             new InputOption('force', null, InputOption::VALUE_NONE, 'Force create theme with same name'),
         ];
     }
