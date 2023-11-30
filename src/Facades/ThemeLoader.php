@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @mixin \YAAP\Theme\ThemeLoader
+ *
  * @see \YAAP\Theme\ThemeLoader
  */
 class ThemeLoader extends Facade
