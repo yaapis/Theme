@@ -60,9 +60,11 @@ abstract class BaseThemeCommand extends Command
      */
     protected function getTheme(): ThemeInfo
     {
-        return $this->themeInfo ??= new ThemeInfo(
-            $this->argument('name'),
-            ThemeLoader::themesPath(),
-        );
+        return $this->themeInfo ??= $this->makeTheme($this->argument('name'));
+    }
+
+    protected function makeTheme(string $name): ThemeInfo
+    {
+        return new ThemeInfo($name, ThemeLoader::themesPath());
     }
 }

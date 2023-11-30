@@ -2,13 +2,16 @@
 
 namespace YAAP\Theme\Commands;
 
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+
+use function Laravel\Prompts\text;
 
 /**
  * Class ThemeGeneratorCommand.
  */
-class ThemeGeneratorCommand extends BaseThemeCommand
+class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissingInput
 {
     /**
      * The console command name.
@@ -31,6 +34,13 @@ class ThemeGeneratorCommand extends BaseThemeCommand
      */
     public function handle(): int
     {
+        $message = $this->validateValue($this->argument('name'));
+        if ($message) {
+            $this->error($message);
+
+            return self::FAILURE;
+        }
+
         // Check if the theme is already exists.
         if (!$this->canGenerateTheme()) {
             return self::FAILURE;
@@ -196,13 +206,44 @@ class ThemeGeneratorCommand extends BaseThemeCommand
         return "{$templatesPath}/{$templateName}";
     }
 
+    private function validateValue($value): string
+    {
+        return match (true) {
+            empty($value) => 'Name is required.',
+
+            filled(
+                preg_match(
+                    '/[^a-zA-Z0-9\-_\s]/',
+                    $value,
+                )
+            ) => 'Name must be alphanumeric, dash, space or underscore.',
+
+            $this->files->isDirectory(
+                $this->makeTheme($value)->getRootDirectoryPath()
+            ) => "Theme \"{$value}\" already exists.",
+
+            default => null,
+        };
+    }
+
     /**
      * Get the console command arguments.
      */
     protected function getArguments(): array
     {
         return [
-            new InputArgument('name', InputArgument::REQUIRED, 'A name of the new theme.'),
+            new InputArgument('name', InputArgument::REQUIRED, 'A name of the new theme'),
+        ];
+    }
+
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'name' => fn () => text(
+                label: 'What is a name of the new theme?',
+                default: 'default',
+                validate: fn ($value) => $this->validateValue($value)
+            ),
         ];
     }
 

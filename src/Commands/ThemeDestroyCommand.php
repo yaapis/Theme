@@ -53,7 +53,7 @@ class ThemeDestroyCommand extends BaseThemeCommand
     protected function getArguments(): array
     {
         return [
-            new InputArgument('name', InputArgument::REQUIRED, 'Name of the theme to generate.'),
+            new InputArgument('name', InputArgument::REQUIRED, 'Name of the theme to destroy'),
         ];
     }
 }
