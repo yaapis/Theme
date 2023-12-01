@@ -5,7 +5,7 @@ Themes are stored inside default laravel's resources folder
 
 ## Requirements
 
-This version requires [PHP](https://www.php.net/) 7.4-8.1 and supports [Laravel](https://laravel.com/) 8-10.
+This version requires [PHP](https://www.php.net/) 8.1 and supports [Laravel](https://laravel.com/) 10.
 
 > Currently, supported only for webpack with `laravel-mix`.
 
@@ -14,13 +14,14 @@ This version requires [PHP](https://www.php.net/) 7.4-8.1 and supports [Laravel]
 | 2.4    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x:                | :x: | :x:                | :x:                | :x:                |
 | 3.0    | :x:                | :x:                | :x:                | :x:                | :white_check_mark: | :x: | :x:                | :x:                | :x:                |
 | 4.2    | :x:                | :x:                | :x:                | :x:                | :x:                | :x: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| 5.0    | :x:                | :x:                | :x:                | :x:                | :x:                | :x: | :x:                | :x:                | :white_check_mark: |
 
 ## Installation
 
 To get the latest version, simply require the project using [Composer](https://getcomposer.org/):
 
 ```bash
-composer require "yaap/theme:^4.0"
+composer require "yaap/theme:^5.0"
 ```
 
 or manually add line to `composer.json`
@@ -28,7 +29,7 @@ or manually add line to `composer.json`
 ```json
 {
   "require": {
-    "yaap/theme": "^4.0"
+    "yaap/theme": "^5.0"
   }
 }
 ```
@@ -166,9 +167,9 @@ project-root
 |   ├── default/
 |   |   ├── assets/        
 |   |   ├── lang/        
-|   |   ├── layouts/
-|   |   ├── partials/
 |   |   ├── views/
+|   |   |   ├── layouts/
+|   |   |   ├── partials/
 |   |   |   └── hello.blade.php
 |   |   └── config.php
 |   ├── admin/
@@ -181,12 +182,11 @@ project-root
 ## Init theme
 
 ```php
-Theme::init($name)
+\YAAP\Theme\Facades\ThemeLoader::init($name);
 ```
 
 This will add to views find path:
 
-* themes/{$name}
 * themes/{$name}/views
 
 Lang files will be added as well:
@@ -194,6 +194,8 @@ Lang files will be added as well:
 * themes/{$name}/lang
 
 ### Making view
+
+> [Laravel: Creating & Rendering Views](https://laravel.com/docs/10.x/views#creating-and-rendering-views)
 
 ```php
 View::make('hello');
@@ -207,7 +209,6 @@ Use laravel mix for assets.
 In header
 
 ```html
-
 <link rel="stylesheet" href="{{ mix('/themes/default/css/app.min.css') }}"/>
 ```
 

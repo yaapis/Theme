@@ -38,8 +38,8 @@ return [
     'containerDir' => [
         'assets' => 'assets',
         'lang' => 'lang',
-        'layout' => 'layouts',
-        'partial' => 'partials',
+        'layout' => 'views/layouts',
+        'partial' => 'views/partials',
         'view' => 'views',
     ],
 ];
