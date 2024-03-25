@@ -114,6 +114,10 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
                 app_path('View/Components/AppLayout.php'),
                 $this->fromTemplate('vite/app/AppLayout.stub')
             );
+            $this->makeFile(
+                $this->containerFolder['view'] . '/hello.blade.php',
+                $this->fromTemplate('vite/views/hello.blade.php')
+            );
         } else {
             $this->makeFile(
                 $this->containerFolder['layout'] . '/master.blade.php',
@@ -139,7 +143,7 @@ class ThemeGeneratorCommand extends BaseThemeCommand implements PromptsForMissin
         $this->makeFile("{$assets}/js/app.js", $this->fromTemplate('laravel-mix/js/app.js'));
     }
 
-    public function isVite(): bool
+    protected function isVite(): bool
     {
         return $this->argument('assets') === 'vite';
     }
